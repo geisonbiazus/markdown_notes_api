@@ -1,4 +1,4 @@
-package note
+package notes
 
 import (
 	"reflect"
@@ -12,7 +12,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 		title := "Note Title"
 		content := "# Note Content"
 
-		myNote := markdownnotes.Note{
+		note := markdownnotes.Note{
 			Title:   title,
 			Content: content,
 		}
@@ -21,8 +21,8 @@ func TestCreateNoteUseCase(t *testing.T) {
 		called := false
 
 		storage.onSave = func(n markdownnotes.Note) {
-			if !reflect.DeepEqual(n, myNote) {
-				t.Errorf("It didn't store the properly. Expected: %v. Actual: %v", myNote, n)
+			if !reflect.DeepEqual(n, note) {
+				t.Errorf("It didn't store the properly. Expected: %v. Actual: %v", note, n)
 			}
 			called = true
 		}

@@ -1,4 +1,4 @@
-package note
+package notes
 
 import "github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 
@@ -7,10 +7,10 @@ type CreateNoteUseCase struct {
 }
 
 func (u *CreateNoteUseCase) Run(title, content string) {
-	newNote := markdownnotes.Note{
+	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
 	}
 
-	u.NoteStorage.Save(newNote)
+	u.NoteStorage.Save(note)
 }
