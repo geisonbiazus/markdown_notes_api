@@ -6,5 +6,5 @@ type Note struct {
 }
 
 type NoteStorage interface {
-	Save(note Note)
+	Save(note Note) error
 }

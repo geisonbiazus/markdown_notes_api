@@ -6,11 +6,11 @@ type CreateNoteUseCase struct {
 	NoteStorage markdownnotes.NoteStorage
 }
 
-func (u *CreateNoteUseCase) Run(title, content string) {
+func (u *CreateNoteUseCase) Run(title, content string) error {
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
 	}
 
-	u.NoteStorage.Save(note)
+	return u.NoteStorage.Save(note)
 }
