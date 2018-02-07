@@ -7,15 +7,15 @@ import (
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 )
 
-type fakeNoteStorage struct {
+type FakeNoteStorage struct {
 	onSave func(markdownnotes.Note) error
 }
 
-func (f *fakeNoteStorage) Save(n markdownnotes.Note) error {
+func (f *FakeNoteStorage) Save(n markdownnotes.Note) error {
 	return f.onSave(n)
 }
 
-func (f *fakeNoteStorage) ShouldReceiveSaveWithNoteAndReturn(
+func (f *FakeNoteStorage) ShouldReceiveSaveWithNoteAndReturn(
 	t *testing.T, note markdownnotes.Note, result error,
 ) *bool {
 	called := false
@@ -29,6 +29,6 @@ func (f *fakeNoteStorage) ShouldReceiveSaveWithNoteAndReturn(
 	return &called
 }
 
-func NewFakeNoteStorage() *fakeNoteStorage {
-	return new(fakeNoteStorage)
+func NewFakeNoteStorage() *FakeNoteStorage {
+	return new(FakeNoteStorage)
 }
