@@ -3,7 +3,8 @@ package notes
 import "github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 
 type CreateNoteUseCase struct {
-	NoteStorage markdownnotes.NoteStorage
+	NoteStorage   markdownnotes.NoteStorage
+	NotePresenter NotePresenter
 }
 
 func (u *CreateNoteUseCase) Run(title, content string) error {
@@ -12,5 +13,12 @@ func (u *CreateNoteUseCase) Run(title, content string) error {
 		Content: content,
 	}
 
-	return u.NoteStorage.Save(note)
+	note, err := u.NoteStorage.Save(note)
+	u.NotePresenter.PresentNote(note)
+
+	return err
+}
+
+type NotePresenter interface {
+	PresentNote(markdownnotes.Note)
 }

@@ -9,34 +9,50 @@ import (
 )
 
 func TestCreateNoteUseCase(t *testing.T) {
-	setup := func() (markdownnotes.Note, *mocks.FakeNoteStorage, CreateNoteUseCase) {
+	setup := func() (
+		markdownnotes.Note,
+		*mocks.FakeNoteStorage,
+		*mocks.FakeNotePresenter,
+		CreateNoteUseCase,
+	) {
 		note := markdownnotes.Note{
 			Title:   "Note Title",
 			Content: "# Note Content",
 		}
 		storage := mocks.NewFakeNoteStorage()
-		usecase := CreateNoteUseCase{storage}
+		presenter := mocks.NewFakeNotePresenter()
+		usecase := CreateNoteUseCase{storage, presenter}
 
-		return note, storage, usecase
+		return note, storage, presenter, usecase
 	}
 
-	t.Run("It creates and stores a note", func(t *testing.T) {
-		note, storage, usecase := setup()
+	t.Run("It creates a note, stores and presents it", func(t *testing.T) {
+		note, storage, presenter, usecase := setup()
+		savedNote := markdownnotes.Note{
+			ID:      1,
+			Title:   note.Title,
+			Content: note.Content,
+		}
 
-		called := storage.ShouldReceiveSaveWithNoteAndReturn(t, note, nil)
+		saveCalled := storage.ShouldReceiveSaveWithNoteAndReturn(t, note, savedNote, nil)
+		presentCalled := presenter.ShouldReceivePresentNoteWithNote(t, savedNote)
 		usecase.Run(note.Title, note.Content)
 
-		if !*called {
+		if !*saveCalled {
 			t.Errorf("It didn't store the note.")
+		}
+
+		if !*presentCalled {
+			t.Errorf("It didn't present the note.")
 		}
 	})
 
 	t.Run("It returns an error when there's and error on save", func(t *testing.T) {
-		note, storage, usecase := setup()
+		note, storage, _, usecase := setup()
 
 		expectedErr := errors.New("My error")
 
-		storage.ShouldReceiveSaveWithNoteAndReturn(t, note, expectedErr)
+		storage.ShouldReceiveSaveWithNoteAndReturn(t, note, note, expectedErr)
 		err := usecase.Run(note.Title, note.Content)
 
 		if err != expectedErr {

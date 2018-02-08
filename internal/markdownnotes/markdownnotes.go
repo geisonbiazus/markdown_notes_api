@@ -1,10 +1,11 @@
 package markdownnotes
 
 type Note struct {
+	ID      int
 	Title   string
 	Content string
 }
 
 type NoteStorage interface {
-	Save(note Note) error
+	Save(note Note) (Note, error)
 }

@@ -8,27 +8,32 @@ import (
 )
 
 type FakeNoteStorage struct {
-	onSave func(markdownnotes.Note) error
+	onSave func(markdownnotes.Note) (markdownnotes.Note, error)
 }
 
-func (f *FakeNoteStorage) Save(n markdownnotes.Note) error {
+func (f *FakeNoteStorage) Save(n markdownnotes.Note) (markdownnotes.Note, error) {
 	return f.onSave(n)
 }
 
 func (f *FakeNoteStorage) ShouldReceiveSaveWithNoteAndReturn(
-	t *testing.T, note markdownnotes.Note, result error,
+	t *testing.T, noteArg markdownnotes.Note,
+	noteResult markdownnotes.Note, errResult error,
 ) *bool {
 	called := false
-	f.onSave = func(n markdownnotes.Note) error {
-		if !reflect.DeepEqual(n, note) {
-			t.Errorf("Wrong note argument. Expected: %v. Actual: %v", note, n)
+	f.onSave = func(n markdownnotes.Note) (markdownnotes.Note, error) {
+		if !reflect.DeepEqual(n, noteArg) {
+			t.Errorf("Wrong note argument. Expected: %v. Actual: %v", noteArg, n)
 		}
 		called = true
-		return result
+		return noteResult, errResult
 	}
 	return &called
 }
 
 func NewFakeNoteStorage() *FakeNoteStorage {
-	return new(FakeNoteStorage)
+	return &FakeNoteStorage{
+		onSave: func(markdownnotes.Note) (markdownnotes.Note, error) {
+			return markdownnotes.Note{}, nil
+		},
+	}
 }
