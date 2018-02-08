@@ -9,3 +9,9 @@ type Note struct {
 type NoteStorage interface {
 	Save(note Note) (Note, error)
 }
+
+type ValidationError struct {
+	Field   string
+	Type    string
+	Message string
+}

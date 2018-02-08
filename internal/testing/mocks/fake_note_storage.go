@@ -30,6 +30,13 @@ func (f *FakeNoteStorage) ShouldReceiveSaveWithNoteAndReturn(
 	return &called
 }
 
+func (f *FakeNoteStorage) ShouldNotReceiveSave(t *testing.T) {
+	f.onSave = func(n markdownnotes.Note) (markdownnotes.Note, error) {
+		t.Error("Save was called when it shouldn't")
+		return n, nil
+	}
+}
+
 func NewFakeNoteStorage() *FakeNoteStorage {
 	return &FakeNoteStorage{
 		onSave: func(markdownnotes.Note) (markdownnotes.Note, error) {

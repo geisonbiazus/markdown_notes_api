@@ -8,11 +8,20 @@ import (
 )
 
 type FakeNotePresenter struct {
-	onPresentNote func(note markdownnotes.Note)
+	onPresentNote  func(note markdownnotes.Note)
+	onPresentError func(errs []markdownnotes.ValidationError)
 }
 
 func (f *FakeNotePresenter) PresentNote(note markdownnotes.Note) {
-	f.onPresentNote(note)
+	if f.onPresentNote != nil {
+		f.onPresentNote(note)
+	}
+}
+
+func (f *FakeNotePresenter) PresentError(errs []markdownnotes.ValidationError) {
+	if f.onPresentError != nil {
+		f.onPresentError(errs)
+	}
 }
 
 func (f *FakeNotePresenter) ShouldReceivePresentNoteWithNote(
@@ -28,8 +37,19 @@ func (f *FakeNotePresenter) ShouldReceivePresentNoteWithNote(
 	return &called
 }
 
-func NewFakeNotePresenter() *FakeNotePresenter {
-	return &FakeNotePresenter{
-		onPresentNote: func(markdownnotes.Note) {},
+func (f *FakeNotePresenter) ShouldReceivePresentErrorsWithErrors(
+	t *testing.T, errsArg []markdownnotes.ValidationError,
+) *bool {
+	called := false
+	f.onPresentError = func(e []markdownnotes.ValidationError) {
+		if !reflect.DeepEqual(e, errsArg) {
+			t.Errorf("Wrong err argument. Expected: %v. Actual: %v", errsArg, e)
+		}
+		called = true
 	}
+	return &called
+}
+
+func NewFakeNotePresenter() *FakeNotePresenter {
+	return new(FakeNotePresenter)
 }

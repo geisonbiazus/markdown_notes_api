@@ -59,4 +59,26 @@ func TestCreateNoteUseCase(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", expectedErr, err)
 		}
 	})
+
+	t.Run("It validates note with an empty title and Presents the error", func(t *testing.T) {
+		_, storage, presenter, usecase := setup()
+
+		errs := []markdownnotes.ValidationError{
+			markdownnotes.ValidationError{
+				Field:   "title",
+				Message: "Can't be blank",
+				Type:    "REQUIRED",
+			},
+		}
+
+		storage.ShouldNotReceiveSave(t)
+		called := presenter.ShouldReceivePresentErrorsWithErrors(t, errs)
+
+		usecase.Run("", "")
+
+		if !*called {
+			t.Errorf("It didn't present the errors.")
+		}
+
+	})
 }
