@@ -6,6 +6,7 @@ import (
 
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 	"github.com/geisonbiazus/markdown_notes_api/internal/testing/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateNoteUseCase(t *testing.T) {
@@ -38,13 +39,8 @@ func TestCreateNoteUseCase(t *testing.T) {
 		presentCalled := presenter.ShouldReceivePresentNoteWithNote(t, savedNote)
 		usecase.Run(note.Title, note.Content)
 
-		if !*saveCalled {
-			t.Errorf("It didn't store the note.")
-		}
-
-		if !*presentCalled {
-			t.Errorf("It didn't present the note.")
-		}
+		assert.True(t, *saveCalled, "It didn save the note.")
+		assert.True(t, *presentCalled, "It didn't present the note.")
 	})
 
 	t.Run("It returns an error when there's and error on save", func(t *testing.T) {
@@ -55,9 +51,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 		storage.ShouldReceiveSaveWithNoteAndReturn(t, note, note, expectedErr)
 		err := usecase.Run(note.Title, note.Content)
 
-		if err != expectedErr {
-			t.Errorf("Expected: %v. Actual: %v", expectedErr, err)
-		}
+		assert.Equal(t, expectedErr, err)
 	})
 
 	t.Run("It validates note with an empty title and Presents the error", func(t *testing.T) {
@@ -76,9 +70,6 @@ func TestCreateNoteUseCase(t *testing.T) {
 
 		usecase.Run("", "")
 
-		if !*called {
-			t.Errorf("It didn't present the errors.")
-		}
-
+		assert.True(t, *called, "It didn't present the errors.")
 	})
 }
