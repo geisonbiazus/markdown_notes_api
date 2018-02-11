@@ -12,16 +12,16 @@ import (
 func TestCreateNoteUseCase(t *testing.T) {
 	setup := func() (
 		markdownnotes.Note,
-		*mocks.FakeNoteStorage,
-		*mocks.FakeNotePresenter,
+		*mocks.NoteStorageMock,
+		*mocks.NotePresenterMock,
 		CreateNoteUseCase,
 	) {
 		note := markdownnotes.Note{
 			Title:   "Note Title",
 			Content: "# Note Content",
 		}
-		storage := mocks.NewFakeNoteStorage()
-		presenter := mocks.NewFakeNotePresenter()
+		storage := mocks.NewNoteStorageMock()
+		presenter := mocks.NewNotePresenterMock()
 		usecase := CreateNoteUseCase{storage, presenter}
 
 		return note, storage, presenter, usecase
@@ -35,12 +35,13 @@ func TestCreateNoteUseCase(t *testing.T) {
 			Content: note.Content,
 		}
 
-		saveCalled := storage.ShouldReceiveSaveWithNoteAndReturn(t, note, savedNote, nil)
-		presentCalled := presenter.ShouldReceivePresentNoteWithNote(t, savedNote)
+		storage.On("Save", note).Return(savedNote, nil)
+		presenter.On("PresentNote", savedNote)
+
 		usecase.Run(note.Title, note.Content)
 
-		assert.True(t, *saveCalled, "It didn save the note.")
-		assert.True(t, *presentCalled, "It didn't present the note.")
+		storage.AssertExpectations(t)
+		presenter.AssertExpectations(t)
 	})
 
 	t.Run("It returns an error when there's and error on save", func(t *testing.T) {
@@ -48,14 +49,15 @@ func TestCreateNoteUseCase(t *testing.T) {
 
 		expectedErr := errors.New("My error")
 
-		storage.ShouldReceiveSaveWithNoteAndReturn(t, note, note, expectedErr)
+		storage.On("Save", note).Return(note, expectedErr)
+
 		err := usecase.Run(note.Title, note.Content)
 
 		assert.Equal(t, expectedErr, err)
 	})
 
 	t.Run("It validates note with an empty title and Presents the error", func(t *testing.T) {
-		_, storage, presenter, usecase := setup()
+		_, _, presenter, usecase := setup()
 
 		errs := []markdownnotes.ValidationError{
 			markdownnotes.ValidationError{
@@ -65,11 +67,10 @@ func TestCreateNoteUseCase(t *testing.T) {
 			},
 		}
 
-		storage.ShouldNotReceiveSave(t)
-		called := presenter.ShouldReceivePresentErrorsWithErrors(t, errs)
+		presenter.On("PresentError", errs)
 
 		usecase.Run("", "")
 
-		assert.True(t, *called, "It didn't present the errors.")
+		presenter.AssertExpectations(t)
 	})
 }

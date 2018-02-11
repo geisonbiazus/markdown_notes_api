@@ -21,9 +21,13 @@ func (u *CreateNoteUseCase) Run(title, content string) error {
 	}
 
 	note, err := u.NoteStorage.Save(note)
+	if err != nil {
+		return err
+	}
+
 	u.NotePresenter.PresentNote(note)
 
-	return err
+	return nil
 }
 
 func validateNote(note markdownnotes.Note) []markdownnotes.ValidationError {
