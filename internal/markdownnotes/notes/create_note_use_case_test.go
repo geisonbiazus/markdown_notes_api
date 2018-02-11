@@ -14,7 +14,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 		markdownnotes.Note,
 		*mocks.NoteStorageMock,
 		*mocks.NotePresenterMock,
-		CreateNoteUseCase,
+		*CreateNoteUseCase,
 	) {
 		note := markdownnotes.Note{
 			Title:   "Note Title",
@@ -22,7 +22,8 @@ func TestCreateNoteUseCase(t *testing.T) {
 		}
 		storage := mocks.NewNoteStorageMock()
 		presenter := mocks.NewNotePresenterMock()
-		usecase := CreateNoteUseCase{storage, presenter}
+		usecaseFactory := &CreateNoteUseCaseFactory{storage}
+		usecase := usecaseFactory.Create(presenter)
 
 		return note, storage, presenter, usecase
 	}
