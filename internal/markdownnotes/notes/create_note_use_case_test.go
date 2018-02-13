@@ -1,34 +1,33 @@
 package notes
 
 import (
-	"errors"
+	"reflect"
 	"testing"
 
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
-	"github.com/geisonbiazus/markdown_notes_api/internal/testing/mocks"
-	"github.com/stretchr/testify/assert"
+	"github.com/geisonbiazus/markdown_notes_api/internal/testing/doubles"
 )
 
 func TestCreateNoteUseCase(t *testing.T) {
 	setup := func() (
 		markdownnotes.Note,
-		*mocks.NoteStorageMock,
-		*mocks.NotePresenterMock,
+		*doubles.NoteStorageSpy,
+		*doubles.NotePresenterSpy,
 		*CreateNoteUseCase,
 	) {
 		note := markdownnotes.Note{
 			Title:   "Note Title",
 			Content: "# Note Content",
 		}
-		storage := mocks.NewNoteStorageMock()
-		presenter := mocks.NewNotePresenterMock()
+		storage := doubles.NewNoteStorageSpy()
+		presenter := doubles.NewNotePresenterSpy()
 		usecaseFactory := &CreateNoteUseCaseFactory{storage}
 		usecase := usecaseFactory.Create(presenter)
 
 		return note, storage, presenter, usecase
 	}
 
-	t.Run("It creates a note, stores and presents it", func(t *testing.T) {
+	t.Run("Given valid arguments, it creates and presents a note", func(t *testing.T) {
 		note, storage, presenter, usecase := setup()
 		savedNote := markdownnotes.Note{
 			ID:      1,
@@ -36,28 +35,33 @@ func TestCreateNoteUseCase(t *testing.T) {
 			Content: note.Content,
 		}
 
-		storage.On("Save", note).Return(savedNote, nil)
-		presenter.On("PresentNote", savedNote)
+		storage.SaveNoteResult = savedNote
 
 		usecase.Run(note.Title, note.Content)
 
-		storage.AssertExpectations(t)
-		presenter.AssertExpectations(t)
+		if storage.SaveNoteArg() != note {
+			t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg())
+		}
+
+		if presenter.PresentNoteNoteArg != savedNote {
+			t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentNoteNoteArg)
+		}
 	})
 
-	t.Run("It returns an error when there's and error on save", func(t *testing.T) {
-		note, storage, _, usecase := setup()
+	t.Run("Given an error occurs on create, it returns the error", func(t *testing.T) {
+		note, _, _, usecase := setup()
+		storage := doubles.NewErrorNoteSotorageStub()
 
-		expectedErr := errors.New("My error")
-
-		storage.On("Save", note).Return(note, expectedErr)
+		usecase.NoteStorage = storage
 
 		err := usecase.Run(note.Title, note.Content)
 
-		assert.Equal(t, expectedErr, err)
+		if storage.Error != err {
+			t.Errorf("Expected: %v. Actual: %v", storage.Error, err)
+		}
 	})
 
-	t.Run("It validates note with an empty title and Presents the error", func(t *testing.T) {
+	t.Run("Given an empty title, it validates note and presents the error", func(t *testing.T) {
 		_, _, presenter, usecase := setup()
 
 		errs := []markdownnotes.ValidationError{
@@ -68,10 +72,10 @@ func TestCreateNoteUseCase(t *testing.T) {
 			},
 		}
 
-		presenter.On("PresentError", errs)
-
 		usecase.Run("", "")
 
-		presenter.AssertExpectations(t)
+		if !reflect.DeepEqual(presenter.PresentErrorErrsArg, errs) {
+			t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorErrsArg, errs)
+		}
 	})
 }

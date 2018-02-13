@@ -1,16 +1,16 @@
 package validators
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestNoteValidator(t *testing.T) {
 	validator := NoteValidator{}
 
-	t.Run("It validates empty title", func(t *testing.T) {
+	t.Run("Given an empty title, it returns a validation error", func(t *testing.T) {
 		note := markdownnotes.Note{}
 		expectedErrs := []markdownnotes.ValidationError{
 			markdownnotes.ValidationError{
@@ -22,6 +22,8 @@ func TestNoteValidator(t *testing.T) {
 
 		errs := validator.Validate(note)
 
-		assert.Equal(t, expectedErrs, errs)
+		if !reflect.DeepEqual(expectedErrs, errs) {
+			t.Errorf("Expected: %v, Actual: %v", expectedErrs, errs)
+		}
 	})
 }
