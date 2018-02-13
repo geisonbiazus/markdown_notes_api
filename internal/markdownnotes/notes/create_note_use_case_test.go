@@ -21,8 +21,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 		}
 		storage := doubles.NewNoteStorageSpy()
 		presenter := doubles.NewNotePresenterSpy()
-		usecaseFactory := &CreateNoteUseCaseFactory{storage}
-		usecase := usecaseFactory.Create(presenter)
+		usecase := NewCreateNoteUseCase(storage)
 
 		return note, storage, presenter, usecase
 	}
@@ -37,7 +36,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 
 		storage.SaveNoteResult = savedNote
 
-		usecase.Run(note.Title, note.Content)
+		usecase.Run(note.Title, note.Content, presenter)
 
 		if storage.SaveNoteArg() != note {
 			t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg())
@@ -49,12 +48,12 @@ func TestCreateNoteUseCase(t *testing.T) {
 	})
 
 	t.Run("Given an error occurs on create, it returns the error", func(t *testing.T) {
-		note, _, _, usecase := setup()
+		note, _, presenter, usecase := setup()
 		storage := doubles.NewErrorNoteSotorageStub()
 
 		usecase.NoteStorage = storage
 
-		err := usecase.Run(note.Title, note.Content)
+		err := usecase.Run(note.Title, note.Content, presenter)
 
 		if storage.Error != err {
 			t.Errorf("Expected: %v. Actual: %v", storage.Error, err)
@@ -72,7 +71,7 @@ func TestCreateNoteUseCase(t *testing.T) {
 			},
 		}
 
-		usecase.Run("", "")
+		usecase.Run("", "", presenter)
 
 		if !reflect.DeepEqual(presenter.PresentErrorErrsArg, errs) {
 			t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorErrsArg, errs)
