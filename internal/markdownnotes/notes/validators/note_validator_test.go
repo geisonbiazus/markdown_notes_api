@@ -10,13 +10,6 @@ import (
 func TestNoteValidator(t *testing.T) {
 	validator := NoteValidator{}
 
-	t.Run("It returns an variable different from Note is passed", func(t *testing.T) {
-		note := "Note string"
-		errs, err := validator.Validate(note)
-		assert.Empty(t, errs)
-		assert.Equal(t, WrongTypeError, err)
-	})
-
 	t.Run("It validates empty title", func(t *testing.T) {
 		note := markdownnotes.Note{}
 		expectedErrs := []markdownnotes.ValidationError{
@@ -27,9 +20,8 @@ func TestNoteValidator(t *testing.T) {
 			},
 		}
 
-		errs, err := validator.Validate(note)
+		errs := validator.Validate(note)
 
 		assert.Equal(t, expectedErrs, errs)
-		assert.Nil(t, err)
 	})
 }

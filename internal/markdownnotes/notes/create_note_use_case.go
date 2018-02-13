@@ -8,30 +8,28 @@ import (
 type CreateNoteUseCase struct {
 	NoteStorage   markdownnotes.NoteStorage
 	NotePresenter NotePresenter
-	Validator     markdownnotes.Validator
+	Validator     Validator
 }
 
 func (u *CreateNoteUseCase) Run(title, content string) error {
-	var err error
-
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
 	}
 
-	errs, err := u.Validator.Validate(note)
-	if err == nil {
-		if len(errs) > 0 {
-			u.NotePresenter.PresentError(errs)
-			return nil
-		}
-
-		note, err = u.NoteStorage.Save(note)
-		if err == nil {
-			u.NotePresenter.PresentNote(note)
-		}
+	errs := u.Validator.Validate(note)
+	if len(errs) > 0 {
+		u.NotePresenter.PresentError(errs)
+		return nil
 	}
-	return err
+
+	note, err := u.NoteStorage.Save(note)
+	if err != nil {
+		return err
+	}
+	u.NotePresenter.PresentNote(note)
+
+	return nil
 }
 
 type CreateNoteUseCaseFactory struct {
@@ -44,6 +42,10 @@ func (f *CreateNoteUseCaseFactory) Create(p NotePresenter) *CreateNoteUseCase {
 		NotePresenter: p,
 		Validator:     validators.NoteValidator{},
 	}
+}
+
+type Validator interface {
+	Validate(markdownnotes.Note) []markdownnotes.ValidationError
 }
 
 type NotePresenter interface {

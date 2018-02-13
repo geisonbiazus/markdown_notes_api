@@ -10,18 +10,13 @@ var WrongTypeError = errors.New("Type Error: It should be a markdownnotes.Note")
 
 type NoteValidator struct{}
 
-func (v NoteValidator) Validate(note interface{}) ([]markdownnotes.ValidationError, error) {
-	n, ok := note.(markdownnotes.Note)
-	if !ok {
-		return []markdownnotes.ValidationError{}, WrongTypeError
-	}
-
+func (v NoteValidator) Validate(note markdownnotes.Note) []markdownnotes.ValidationError {
 	errs := []markdownnotes.ValidationError{}
 
-	if n.Title == "" {
+	if note.Title == "" {
 		errs = append(errs, markdownnotes.ValidationError{
 			Field: "title", Type: "REQUIRED", Message: "Can't be blank",
 		})
 	}
-	return errs, nil
+	return errs
 }
