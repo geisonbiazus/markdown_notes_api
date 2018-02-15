@@ -23,7 +23,11 @@ type CreateNoteHandler struct {
 func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.Presenter.SetResponseWriter(w)
 	params := h.getParams(r)
-	h.UseCase.Run(params.Note.Title, params.Note.Content, h.Presenter)
+
+	err := h.UseCase.Run(params.Note.Title, params.Note.Content, h.Presenter)
+	if err != nil {
+		h.Presenter.InternalServerError()
+	}
 }
 
 func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
@@ -44,4 +48,5 @@ type CreateNoteUseCase interface {
 type HTTPNotePresenter interface {
 	notes.NotePresenter
 	SetResponseWriter(http.ResponseWriter)
+	InternalServerError()
 }

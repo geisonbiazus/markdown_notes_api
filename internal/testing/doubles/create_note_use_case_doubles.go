@@ -6,13 +6,14 @@ type CreateNoteUseCaseSpy struct {
 	RunTitleArg     string
 	RunContentArg   string
 	RunPresenterArg notes.NotePresenter
+	RunErrorResult  error
 }
 
 func (s *CreateNoteUseCaseSpy) Run(title, content string, presenter notes.NotePresenter) error {
 	s.RunTitleArg = title
 	s.RunContentArg = content
 	s.RunPresenterArg = presenter
-	return nil
+	return s.RunErrorResult
 }
 
 func NewCreateNoteUseCaseSpy() *CreateNoteUseCaseSpy {
