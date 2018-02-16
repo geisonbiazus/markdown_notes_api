@@ -13,3 +13,7 @@ func (f *NoteStorageFake) Save(n markdownnotes.Note) (markdownnotes.Note, error)
 	f.data = append(f.data, n)
 	return n, nil
 }
+
+func NewNoteStorageFake() *NoteStorageFake {
+	return new(NoteStorageFake)
+}
