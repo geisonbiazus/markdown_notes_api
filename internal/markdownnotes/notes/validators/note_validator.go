@@ -1,12 +1,6 @@
 package validators
 
-import (
-	"errors"
-
-	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
-)
-
-var WrongTypeError = errors.New("Type Error: It should be a markdownnotes.Note")
+import "github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 
 type NoteValidator struct{}
 
