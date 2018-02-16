@@ -1,15 +1,17 @@
 package doubles
 
-import "github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes/notes"
+import (
+	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
+)
 
 type CreateNoteUseCaseSpy struct {
 	RunTitleArg     string
 	RunContentArg   string
-	RunPresenterArg notes.NotePresenter
+	RunPresenterArg markdownnotes.NotePresenter
 	RunErrorResult  error
 }
 
-func (s *CreateNoteUseCaseSpy) Run(title, content string, presenter notes.NotePresenter) error {
+func (s *CreateNoteUseCaseSpy) Run(title, content string, presenter markdownnotes.NotePresenter) error {
 	s.RunTitleArg = title
 	s.RunContentArg = content
 	s.RunPresenterArg = presenter

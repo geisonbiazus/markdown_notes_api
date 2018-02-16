@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes/notes"
+	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 )
 
 type createNoteHandlerParams struct {
@@ -26,7 +26,7 @@ func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err := h.UseCase.Run(params.Note.Title, params.Note.Content, h.Presenter)
 	if err != nil {
-		h.Presenter.InternalServerError()
+		h.Presenter.ServiceUnavailable()
 	}
 }
 
@@ -42,11 +42,11 @@ func NewCreateNoteHandler(u CreateNoteUseCase, p HTTPNotePresenter) *CreateNoteH
 }
 
 type CreateNoteUseCase interface {
-	Run(title, content string, presenter notes.NotePresenter) error
+	Run(title, content string, presenter markdownnotes.NotePresenter) error
 }
 
 type HTTPNotePresenter interface {
-	notes.NotePresenter
+	markdownnotes.NotePresenter
 	SetResponseWriter(http.ResponseWriter)
-	InternalServerError()
+	ServiceUnavailable()
 }

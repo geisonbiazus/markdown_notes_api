@@ -10,7 +10,7 @@ type CreateNoteUseCase struct {
 	Validator   Validator
 }
 
-func (u *CreateNoteUseCase) Run(title, content string, presenter NotePresenter) error {
+func (u *CreateNoteUseCase) Run(title, content string, presenter markdownnotes.NotePresenter) error {
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
@@ -40,9 +40,4 @@ func NewCreateNoteUseCase(storage markdownnotes.NoteStorage) *CreateNoteUseCase 
 
 type Validator interface {
 	Validate(markdownnotes.Note) []markdownnotes.ValidationError
-}
-
-type NotePresenter interface {
-	PresentNote(markdownnotes.Note)
-	PresentError([]markdownnotes.ValidationError)
 }

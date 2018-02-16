@@ -79,8 +79,8 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if !presenter.InternalServerErrorCalled {
-			t.Error("It didn't called presenter.InternalServerError()")
+		if !presenter.ServiceUnavailableCalled {
+			t.Error("It didn't called presenter.ServiceUnavailable()")
 		}
 	})
 }
