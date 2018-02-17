@@ -8,7 +8,7 @@ func InitRouter() http.Handler {
 	handlers := InitHandlers()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/notes", handlers.CreateNote)
+	mux.Handle("/api/v1/notes", handlers.CreateNote)
 
 	return mux
 }
