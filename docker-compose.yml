@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    image: geisonbiazus/markdown_notes_api:v1
+    build: .
+    command: go run cmd/server/main.go
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/go/src/github.com/geisonbiazus/markdown_notes_api
+    working_dir: /go/src/github.com/geisonbiazus/markdown_notes_api
+    environment:
+      PORT: 8080
