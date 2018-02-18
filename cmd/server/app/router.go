@@ -2,13 +2,15 @@ package app
 
 import (
 	"net/http"
+
+	"github.com/geisonbiazus/markdown_notes_api/cmd/server/handlers"
 )
 
 func InitRouter() http.Handler {
-	handlers := InitHandlers()
+	h := InitHandlers()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/v1/notes", handlers.CreateNote)
+	mux.Handle("/api/v1/notes", &handlers.HTTPMethodHandler{Post: h.CreateNote})
 
 	return mux
 }
