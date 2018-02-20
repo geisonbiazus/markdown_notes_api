@@ -38,8 +38,8 @@ func TestCreateNoteUseCase(t *testing.T) {
 
 		usecase.Run(note.Title, note.Content, presenter)
 
-		if storage.SaveNoteArg() != note {
-			t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg())
+		if storage.SaveNoteArg != note {
+			t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg)
 		}
 
 		if presenter.PresentNoteNoteArg != savedNote {

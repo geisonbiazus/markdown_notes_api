@@ -14,6 +14,10 @@ func (f *NoteStorageFake) Save(n markdownnotes.Note) (markdownnotes.Note, error)
 	return n, nil
 }
 
+func (f *NoteStorageFake) FindAll() ([]markdownnotes.Note, error) {
+	return f.data, nil
+}
+
 func NewNoteStorageFake() *NoteStorageFake {
 	return new(NoteStorageFake)
 }

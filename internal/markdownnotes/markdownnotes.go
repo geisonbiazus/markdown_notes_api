@@ -8,11 +8,16 @@ type Note struct {
 
 type NoteStorage interface {
 	Save(note Note) (Note, error)
+	FindAll() ([]Note, error)
 }
 
 type NotePresenter interface {
 	PresentNote(Note)
 	PresentError([]ValidationError)
+}
+
+type NoteListPresenter interface {
+	PresentNotes(notes []Note)
 }
 
 type ValidationError struct {
