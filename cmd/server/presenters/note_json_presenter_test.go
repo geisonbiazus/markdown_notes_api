@@ -17,8 +17,8 @@ func TestNoteJSONPresenter(t *testing.T) {
 		*NoteJSONPresenter,
 	) {
 		w := httptest.NewRecorder()
-		presenter := NewNoteJSONPresenter()
-		presenter.SetResponseWriter(w)
+		factory := NewNoteJSONPresenterFactory()
+		presenter := factory.Create(w).(*NoteJSONPresenter)
 
 		return w, presenter
 	}

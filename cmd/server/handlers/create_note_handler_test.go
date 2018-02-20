@@ -13,20 +13,20 @@ import (
 func TestCreateNoteHandler(t *testing.T) {
 	setup := func() (
 		*doubles.CreateNoteUseCaseSpy,
-		*doubles.HTTPNotePresenterSpy,
+		*doubles.HTTPNotePresenterFactorySpy,
 		*CreateNoteHandler,
 		*httptest.ResponseRecorder,
 	) {
 		usecase := doubles.NewCreateNoteUseCaseSpy()
-		presenter := doubles.NewHTTPPresenterSpy()
-		handler := NewCreateNoteHandler(usecase, presenter)
+		presenterFactory := doubles.NewHTTPNotePresenterFactorySpy()
+		handler := NewCreateNoteHandler(usecase, presenterFactory)
 		w := httptest.NewRecorder()
 
-		return usecase, presenter, handler, w
+		return usecase, presenterFactory, handler, w
 	}
 
 	t.Run("Given a request title and content, it extracts the values and send them to use case", func(t *testing.T) {
-		usecase, presenter, handler, w := setup()
+		usecase, presenterFactory, handler, w := setup()
 
 		title := "Title"
 		content := "Content"
@@ -35,8 +35,8 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if presenter.ResponseWriter != w {
-			t.Errorf("It didn't set the presenter response writer")
+		if presenterFactory.CreateResponseWritterArg != w {
+			t.Errorf("It didn't create the presenter with response writer")
 		}
 
 		if usecase.RunTitleArg != title {
@@ -47,13 +47,13 @@ func TestCreateNoteHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", content, usecase.RunContentArg)
 		}
 
-		if usecase.RunPresenterArg != presenter {
-			t.Errorf("Expected: %v. Actual: %v", presenter, usecase.RunPresenterArg)
+		if usecase.RunPresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.RunPresenterArg)
 		}
 	})
 
 	t.Run("Given a request with an invalid body JSON, ignores the body", func(t *testing.T) {
-		usecase, presenter, handler, w := setup()
+		usecase, presenterFactory, handler, w := setup()
 		r := createNoteRequest("invalid JSON")
 
 		handler.ServeHTTP(w, r)
@@ -66,20 +66,20 @@ func TestCreateNoteHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", "", usecase.RunContentArg)
 		}
 
-		if usecase.RunPresenterArg != presenter {
-			t.Errorf("Expected: %v. Actual: %v", presenter, usecase.RunPresenterArg)
+		if usecase.RunPresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.RunPresenterArg)
 		}
 	})
 
 	t.Run("When an error occur in use case, it presents internal server error", func(t *testing.T) {
-		usecase, presenter, handler, w := setup()
+		usecase, presenterFactory, handler, w := setup()
 		usecase.RunErrorResult = errors.New("Error")
 
 		r := createNoteRequest("")
 
 		handler.ServeHTTP(w, r)
 
-		if !presenter.ServiceUnavailableCalled {
+		if !presenterFactory.ReturnedHTTPNotePresenter.ServiceUnavailableCalled {
 			t.Error("It didn't called presenter.ServiceUnavailable()")
 		}
 	})

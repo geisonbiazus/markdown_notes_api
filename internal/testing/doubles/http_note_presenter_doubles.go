@@ -2,6 +2,8 @@ package doubles
 
 import (
 	"net/http"
+
+	"github.com/geisonbiazus/markdown_notes_api/cmd/server/presenters"
 )
 
 type HTTPNotePresenterSpy struct {
@@ -10,14 +12,27 @@ type HTTPNotePresenterSpy struct {
 	ServiceUnavailableCalled bool
 }
 
-func (s *HTTPNotePresenterSpy) SetResponseWriter(w http.ResponseWriter) {
-	s.ResponseWriter = w
-}
-
 func (s *HTTPNotePresenterSpy) ServiceUnavailable() {
 	s.ServiceUnavailableCalled = true
 }
 
-func NewHTTPPresenterSpy() *HTTPNotePresenterSpy {
+func NewHTTPNotePresenterSpy() *HTTPNotePresenterSpy {
 	return &HTTPNotePresenterSpy{}
+}
+
+type HTTPNotePresenterFactorySpy struct {
+	CreateCalled              bool
+	CreateResponseWritterArg  http.ResponseWriter
+	ReturnedHTTPNotePresenter *HTTPNotePresenterSpy
+}
+
+func (s *HTTPNotePresenterFactorySpy) Create(w http.ResponseWriter) presenters.HTTPNotePresenter {
+	s.CreateCalled = true
+	s.CreateResponseWritterArg = w
+	s.ReturnedHTTPNotePresenter = NewHTTPNotePresenterSpy()
+	return s.ReturnedHTTPNotePresenter
+}
+
+func NewHTTPNotePresenterFactorySpy() *HTTPNotePresenterFactorySpy {
+	return &HTTPNotePresenterFactorySpy{}
 }

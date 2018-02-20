@@ -11,10 +11,6 @@ type NoteJSONPresenter struct {
 	ResponseWriter http.ResponseWriter
 }
 
-func (p *NoteJSONPresenter) SetResponseWriter(w http.ResponseWriter) {
-	p.ResponseWriter = w
-}
-
 func (p *NoteJSONPresenter) PresentNote(n markdownnotes.Note) {
 	p.renderJSON(http.StatusCreated, n)
 }
@@ -45,6 +41,12 @@ func (p *NoteJSONPresenter) renderJSON(status int, object interface{}) {
 	p.ResponseWriter.Write(body)
 }
 
-func NewNoteJSONPresenter() *NoteJSONPresenter {
-	return new(NoteJSONPresenter)
+type NoteJSONPresenterFactory struct{}
+
+func (f NoteJSONPresenterFactory) Create(w http.ResponseWriter) HTTPNotePresenter {
+	return &NoteJSONPresenter{w}
+}
+
+func NewNoteJSONPresenterFactory() HTTPNotePresenterFactory {
+	return NoteJSONPresenterFactory{}
 }

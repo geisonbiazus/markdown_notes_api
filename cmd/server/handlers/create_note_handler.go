@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/geisonbiazus/markdown_notes_api/cmd/server/presenters"
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 )
 
@@ -16,17 +17,17 @@ type createNoteHandlerParams struct {
 }
 
 type CreateNoteHandler struct {
-	UseCase   CreateNoteUseCase
-	Presenter HTTPNotePresenter
+	UseCase          CreateNoteUseCase
+	PresenterFactory presenters.HTTPNotePresenterFactory
 }
 
 func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.Presenter.SetResponseWriter(w)
+	presenter := h.PresenterFactory.Create(w)
 	params := h.getParams(r)
 
-	err := h.UseCase.Run(params.Note.Title, params.Note.Content, h.Presenter)
+	err := h.UseCase.Run(params.Note.Title, params.Note.Content, presenter)
 	if err != nil {
-		h.Presenter.ServiceUnavailable()
+		presenter.ServiceUnavailable()
 	}
 }
 
@@ -37,16 +38,10 @@ func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 	return params
 }
 
-func NewCreateNoteHandler(u CreateNoteUseCase, p HTTPNotePresenter) *CreateNoteHandler {
-	return &CreateNoteHandler{UseCase: u, Presenter: p}
+func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.HTTPNotePresenterFactory) *CreateNoteHandler {
+	return &CreateNoteHandler{UseCase: u, PresenterFactory: pf}
 }
 
 type CreateNoteUseCase interface {
 	Run(title, content string, presenter markdownnotes.NotePresenter) error
-}
-
-type HTTPNotePresenter interface {
-	markdownnotes.NotePresenter
-	SetResponseWriter(http.ResponseWriter)
-	ServiceUnavailable()
 }
