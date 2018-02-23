@@ -17,14 +17,19 @@ func NewListNotesHandler(u ListNoteUseCase, f HTTPNoteListPresenterFactory) *Lis
 
 func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	presenter := h.PresenterFactory.Create(w)
-	h.UseCase.Run(presenter)
+	err := h.UseCase.Run(presenter)
+
+	if err != nil {
+		presenter.ServiceUnavailable()
+	}
 }
 
 type ListNoteUseCase interface {
-	Run(markdownnotes.NoteListPresenter)
+	Run(markdownnotes.NoteListPresenter) error
 }
 type HTTPNoteListPresenter interface {
 	markdownnotes.NoteListPresenter
+	ServiceUnavailable()
 }
 type HTTPNoteListPresenterFactory interface {
 	Create(w http.ResponseWriter) HTTPNoteListPresenter
