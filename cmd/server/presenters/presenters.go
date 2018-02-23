@@ -14,3 +14,12 @@ type HTTPNotePresenter interface {
 	markdownnotes.NotePresenter
 	ServiceUnavailable()
 }
+
+type HTTPNoteListPresenter interface {
+	markdownnotes.NoteListPresenter
+	ServiceUnavailable()
+}
+
+type HTTPNoteListPresenterFactory interface {
+	Create(w http.ResponseWriter) HTTPNoteListPresenter
+}

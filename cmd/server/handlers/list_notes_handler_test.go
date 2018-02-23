@@ -7,19 +7,19 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
+	"github.com/geisonbiazus/markdown_notes_api/internal/testing/doubles"
 )
 
 func TestListNotesHandler(t *testing.T) {
 	setup := func() (
-		*ListNotesUseCaseSpy,
-		*HTTPNoteListPresenterFactorySpy,
+		*doubles.ListNotesUseCaseSpy,
+		*doubles.HTTPNoteListPresenterFactorySpy,
 		*ListNotesHandler,
 		*http.Request,
 		*httptest.ResponseRecorder,
 	) {
-		usecase := NewListNotesUseCaseSpy()
-		presenterFactory := NewHTTPNoteListPresenterFactorySpy()
+		usecase := doubles.NewListNotesUseCaseSpy()
+		presenterFactory := doubles.NewHTTPNoteListPresenterFactorySpy()
 		handler := NewListNotesHandler(usecase, presenterFactory)
 		r := httptest.NewRequest(http.MethodGet, "http://example.org/notes", nil)
 		w := httptest.NewRecorder()
@@ -50,46 +50,4 @@ func TestListNotesHandler(t *testing.T) {
 			t.Error("It didn't call ServiceUnavailable")
 		}
 	})
-}
-
-type ListNotesUseCaseSpy struct {
-	RunPresenterArg markdownnotes.NoteListPresenter
-	RunErrorResult  error
-}
-
-func NewListNotesUseCaseSpy() *ListNotesUseCaseSpy {
-	return &ListNotesUseCaseSpy{}
-}
-
-func (s *ListNotesUseCaseSpy) Run(p markdownnotes.NoteListPresenter) error {
-	s.RunPresenterArg = p
-	return s.RunErrorResult
-}
-
-type HTTPNoteListPresenterSpy struct {
-	ServiceUnavailableCalled bool
-}
-
-func (s *HTTPNoteListPresenterSpy) PresentNotes(n []markdownnotes.Note) {
-}
-
-func (s *HTTPNoteListPresenterSpy) ServiceUnavailable() {
-	s.ServiceUnavailableCalled = true
-}
-
-type HTTPNoteListPresenterFactorySpy struct {
-	ReturnedHTTPNoteListPresenter *HTTPNoteListPresenterSpy
-	CreateResponseWriterArg       http.ResponseWriter
-}
-
-func NewHTTPNoteListPresenterFactorySpy() *HTTPNoteListPresenterFactorySpy {
-	presenterSpy := &HTTPNoteListPresenterSpy{}
-	return &HTTPNoteListPresenterFactorySpy{
-		ReturnedHTTPNoteListPresenter: presenterSpy,
-	}
-}
-
-func (s *HTTPNoteListPresenterFactorySpy) Create(w http.ResponseWriter) HTTPNoteListPresenter {
-	s.CreateResponseWriterArg = w
-	return s.ReturnedHTTPNoteListPresenter
 }

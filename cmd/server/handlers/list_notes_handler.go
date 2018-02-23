@@ -3,15 +3,16 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/geisonbiazus/markdown_notes_api/cmd/server/presenters"
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 )
 
 type ListNotesHandler struct {
 	UseCase          ListNoteUseCase
-	PresenterFactory HTTPNoteListPresenterFactory
+	PresenterFactory presenters.HTTPNoteListPresenterFactory
 }
 
-func NewListNotesHandler(u ListNoteUseCase, f HTTPNoteListPresenterFactory) *ListNotesHandler {
+func NewListNotesHandler(u ListNoteUseCase, f presenters.HTTPNoteListPresenterFactory) *ListNotesHandler {
 	return &ListNotesHandler{u, f}
 }
 
@@ -26,11 +27,4 @@ func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type ListNoteUseCase interface {
 	Run(markdownnotes.NoteListPresenter) error
-}
-type HTTPNoteListPresenter interface {
-	markdownnotes.NoteListPresenter
-	ServiceUnavailable()
-}
-type HTTPNoteListPresenterFactory interface {
-	Create(w http.ResponseWriter) HTTPNoteListPresenter
 }
