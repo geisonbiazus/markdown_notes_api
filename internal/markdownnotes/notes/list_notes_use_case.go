@@ -1,6 +1,8 @@
 package notes
 
-import "github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
+import (
+	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
+)
 
 type ListNotesUseCase struct {
 	NoteStorage markdownnotes.NoteStorage

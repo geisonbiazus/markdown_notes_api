@@ -37,7 +37,7 @@ func TestNoteListJSONPresenter(t *testing.T) {
 				),
 			)
 
-			assertResponse(t, w, expectedBody, http.StatusCreated)
+			assertResponse(t, w, expectedBody, http.StatusOK)
 		})
 	})
 }

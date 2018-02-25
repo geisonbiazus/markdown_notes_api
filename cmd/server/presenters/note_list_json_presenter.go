@@ -11,7 +11,7 @@ type NoteListJSONPresenter struct {
 }
 
 func (p *NoteListJSONPresenter) PresentNotes(n []markdownnotes.Note) {
-	p.RenderJSON(http.StatusCreated, n)
+	p.RenderJSON(http.StatusOK, n)
 }
 
 type NoteListJSONPresenterFactory struct{}

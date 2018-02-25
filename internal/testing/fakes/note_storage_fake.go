@@ -19,5 +19,5 @@ func (f *NoteStorageFake) FindAll() ([]markdownnotes.Note, error) {
 }
 
 func NewNoteStorageFake() *NoteStorageFake {
-	return new(NoteStorageFake)
+	return &NoteStorageFake{data: make([]markdownnotes.Note, 0)}
 }
