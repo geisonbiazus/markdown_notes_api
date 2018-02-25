@@ -10,7 +10,10 @@ func InitRouter() http.Handler {
 	h := InitHandlers()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/v1/notes", &handlers.HTTPMethodHandler{Post: h.CreateNote})
+	mux.Handle("/api/v1/notes", &handlers.HTTPMethodHandler{
+		Post: h.CreateNote,
+		Get:  h.ListNotes,
+	})
 
 	return mux
 }
