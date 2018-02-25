@@ -18,6 +18,15 @@ func (f *NoteStorageFake) FindAll() ([]markdownnotes.Note, error) {
 	return f.data, nil
 }
 
+func (f *NoteStorageFake) FindByID(id int) (markdownnotes.Note, error) {
+	for _, note := range f.data {
+		if note.ID == id {
+			return note, nil
+		}
+	}
+	return markdownnotes.NoNote, nil
+}
+
 func NewNoteStorageFake() *NoteStorageFake {
 	return &NoteStorageFake{data: make([]markdownnotes.Note, 0)}
 }

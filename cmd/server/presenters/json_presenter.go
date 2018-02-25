@@ -36,3 +36,7 @@ func (p *JSONPresenter) ServiceUnavailable() {
 	}
 	p.RenderJSON(http.StatusServiceUnavailable, errsContainer{err})
 }
+
+func (p *JSONPresenter) NotFound() {
+
+}

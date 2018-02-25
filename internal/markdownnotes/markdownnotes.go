@@ -1,5 +1,7 @@
 package markdownnotes
 
+var NoNote = Note{}
+
 type Note struct {
 	ID      int    `json:"id"`
 	Title   string `json:"title"`
@@ -9,11 +11,13 @@ type Note struct {
 type NoteStorage interface {
 	Save(note Note) (Note, error)
 	FindAll() ([]Note, error)
+	FindByID(id int) (Note, error)
 }
 
 type NotePresenter interface {
 	PresentNote(Note)
 	PresentError([]ValidationError)
+	NotFound()
 }
 
 type NoteListPresenter interface {

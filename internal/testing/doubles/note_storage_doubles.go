@@ -7,9 +7,11 @@ import (
 )
 
 type NoteStorageSpy struct {
-	SaveNoteResult markdownnotes.Note
-	SaveNoteArg    markdownnotes.Note
-	FindAllResult  []markdownnotes.Note
+	SaveNoteResult     markdownnotes.Note
+	SaveNoteArg        markdownnotes.Note
+	FindAllResult      []markdownnotes.Note
+	FindByIDIDArg      int
+	FindByIDNoteResult markdownnotes.Note
 }
 
 func NewNoteStorageSpy() *NoteStorageSpy {
@@ -23,6 +25,11 @@ func (s *NoteStorageSpy) Save(n markdownnotes.Note) (markdownnotes.Note, error) 
 
 func (s *NoteStorageSpy) FindAll() ([]markdownnotes.Note, error) {
 	return s.FindAllResult, nil
+}
+
+func (s *NoteStorageSpy) FindByID(id int) (markdownnotes.Note, error) {
+	s.FindByIDIDArg = id
+	return s.FindByIDNoteResult, nil
 }
 
 type ErrorNoteStorageStub struct {
@@ -39,4 +46,8 @@ func (s *ErrorNoteStorageStub) Save(n markdownnotes.Note) (markdownnotes.Note, e
 
 func (s *ErrorNoteStorageStub) FindAll() ([]markdownnotes.Note, error) {
 	return []markdownnotes.Note{}, s.Error
+}
+
+func (s *ErrorNoteStorageStub) FindByID(id int) (markdownnotes.Note, error) {
+	return markdownnotes.Note{}, s.Error
 }
