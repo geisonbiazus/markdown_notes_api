@@ -71,7 +71,7 @@ func TestCreateNoteHandler(t *testing.T) {
 		}
 	})
 
-	t.Run("When an error occur in use case, it presents internal server error", func(t *testing.T) {
+	t.Run("When an error occurs in the use case, it presents internal server error", func(t *testing.T) {
 		usecase, presenterFactory, handler, w := setup()
 		usecase.RunErrorResult = errors.New("Error")
 
