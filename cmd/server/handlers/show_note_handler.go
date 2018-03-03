@@ -18,7 +18,8 @@ func NewShowNoteHandler(u ShowNoteUseCase, f presenters.HTTPNotePresenterFactory
 	return &ShowNoteHandler{UseCase: u, PresenterFactory: f}
 }
 
-func (h *ShowNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (h *ShowNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p := httprouter.ParamsFromContext(r.Context())
 	noteID, _ := strconv.Atoi(p.ByName("id"))
 	presenter := h.PresenterFactory.Create(w)
 	err := h.UseCase.Run(noteID, presenter)
