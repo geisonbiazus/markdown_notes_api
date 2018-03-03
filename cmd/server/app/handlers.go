@@ -12,12 +12,14 @@ import (
 type Handlers struct {
 	CreateNote http.Handler
 	ListNotes  http.Handler
+	ShowNote   http.Handler
 }
 
 func InitHandlers() *Handlers {
 	noteStorage := fakes.NewNoteStorageFake()
 	createNoteUseCase := notes.NewCreateNoteUseCase(noteStorage)
 	listNotesUseCase := notes.NewListNotesUseCase(noteStorage)
+	showNoteUseCase := notes.NewShowNoteUseCase(noteStorage)
 
 	createNotePresenterFactory := presenters.NewNoteJSONPresenterFactory()
 	noteListPresenterFactory := presenters.NewNoteListJSONPresenterFactory()
@@ -25,5 +27,6 @@ func InitHandlers() *Handlers {
 	return &Handlers{
 		CreateNote: handlers.NewCreateNoteHandler(createNoteUseCase, createNotePresenterFactory),
 		ListNotes:  handlers.NewListNotesHandler(listNotesUseCase, noteListPresenterFactory),
+		ShowNote:   handlers.NewShowNoteHandler(showNoteUseCase, createNotePresenterFactory),
 	}
 }
