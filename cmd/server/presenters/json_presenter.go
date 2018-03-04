@@ -38,5 +38,5 @@ func (p *JSONPresenter) ServiceUnavailable() {
 }
 
 func (p *JSONPresenter) NotFound() {
-
+	http.NotFound(p.ResponseWriter, &http.Request{})
 }

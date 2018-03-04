@@ -79,6 +79,17 @@ func TestJSONPresenter(t *testing.T) {
 			assertResponse(t, w, expectedBody, http.StatusServiceUnavailable)
 		})
 	})
+
+	t.Run("NotFound", func(t *testing.T) {
+		t.Run("It renders NotFound", func(t *testing.T) {
+			w, presenter := setup()
+			presenter.NotFound()
+
+			if w.Code != http.StatusNotFound {
+				t.Errorf("Expected: %v. Actual: %v", http.StatusNotFound, w.Code)
+			}
+		})
+	})
 }
 
 func responseBody(w *httptest.ResponseRecorder) []byte {
