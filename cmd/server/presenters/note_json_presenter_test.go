@@ -15,7 +15,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 		*NoteJSONPresenter,
 	) {
 		w := httptest.NewRecorder()
-		factory := NewNoteJSONPresenterFactory()
+		factory := NewNoteJSONPresenterFactory(http.StatusAccepted)
 		presenter := factory.Create(w).(*NoteJSONPresenter)
 
 		return w, presenter
@@ -35,7 +35,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 
 			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`, note.ID, note.Title, note.Content))
 
-			assertResponse(t, w, expectedBody, http.StatusCreated)
+			assertResponse(t, w, expectedBody, http.StatusAccepted)
 		})
 	})
 }

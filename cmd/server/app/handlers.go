@@ -21,12 +21,13 @@ func InitHandlers() *Handlers {
 	listNotesUseCase := notes.NewListNotesUseCase(noteStorage)
 	showNoteUseCase := notes.NewShowNoteUseCase(noteStorage)
 
-	createNotePresenterFactory := presenters.NewNoteJSONPresenterFactory()
+	createNotePresenterFactory := presenters.NewNoteJSONPresenterFactory(http.StatusCreated)
+	showNotePresenterFactory := presenters.NewNoteJSONPresenterFactory(http.StatusOK)
 	noteListPresenterFactory := presenters.NewNoteListJSONPresenterFactory()
 
 	return &Handlers{
 		CreateNote: handlers.NewCreateNoteHandler(createNoteUseCase, createNotePresenterFactory),
 		ListNotes:  handlers.NewListNotesHandler(listNotesUseCase, noteListPresenterFactory),
-		ShowNote:   handlers.NewShowNoteHandler(showNoteUseCase, createNotePresenterFactory),
+		ShowNote:   handlers.NewShowNoteHandler(showNoteUseCase, showNotePresenterFactory),
 	}
 }

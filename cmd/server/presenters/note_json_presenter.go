@@ -7,19 +7,22 @@ import (
 )
 
 type NoteJSONPresenter struct {
+	PresentNoteStatus int
 	JSONPresenter
 }
 
 func (p *NoteJSONPresenter) PresentNote(n markdownnotes.Note) {
-	p.RenderJSON(http.StatusCreated, n)
+	p.RenderJSON(p.PresentNoteStatus, n)
 }
 
-type NoteJSONPresenterFactory struct{}
+type NoteJSONPresenterFactory struct {
+	PresentNoteStatus int
+}
 
 func (f NoteJSONPresenterFactory) Create(w http.ResponseWriter) HTTPNotePresenter {
-	return &NoteJSONPresenter{JSONPresenter{w}}
+	return &NoteJSONPresenter{f.PresentNoteStatus, JSONPresenter{w}}
 }
 
-func NewNoteJSONPresenterFactory() HTTPNotePresenterFactory {
-	return NoteJSONPresenterFactory{}
+func NewNoteJSONPresenterFactory(presentNoteStatus int) HTTPNotePresenterFactory {
+	return NoteJSONPresenterFactory{PresentNoteStatus: presentNoteStatus}
 }
