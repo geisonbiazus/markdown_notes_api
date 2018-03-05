@@ -12,13 +12,13 @@ import (
 
 func TestListNotesHandler(t *testing.T) {
 	setup := func() (
-		*doubles.ListNotesUseCaseSpy,
+		*doubles.NoteUseCaseSpy,
 		*doubles.HTTPNoteListPresenterFactorySpy,
 		*ListNotesHandler,
 		*http.Request,
 		*httptest.ResponseRecorder,
 	) {
-		usecase := doubles.NewListNotesUseCaseSpy()
+		usecase := doubles.NewNoteUseCaseSpy()
 		presenterFactory := doubles.NewHTTPNoteListPresenterFactorySpy()
 		handler := NewListNotesHandler(usecase, presenterFactory)
 		r := httptest.NewRequest(http.MethodGet, "http://example.org/notes", nil)
@@ -34,14 +34,14 @@ func TestListNotesHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", w, presenterFactory.CreateResponseWriterArg)
 		}
 
-		if !reflect.DeepEqual(usecase.RunPresenterArg, presenterFactory.ReturnedHTTPNoteListPresenter) {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNoteListPresenter, usecase.RunPresenterArg)
+		if !reflect.DeepEqual(usecase.ListNotesPresenterArg, presenterFactory.ReturnedHTTPNoteListPresenter) {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNoteListPresenter, usecase.ListNotesPresenterArg)
 		}
 	})
 
 	t.Run("When an error is returned from UseCase, it presents service unavailable", func(t *testing.T) {
 		usecase, presenterFactory, handler, r, w := setup()
-		usecase.RunErrorResult = errors.New("Error")
+		usecase.ListNotesErrorResult = errors.New("Error")
 		handler.ServeHTTP(w, r)
 
 		presenter := presenterFactory.ReturnedHTTPNoteListPresenter

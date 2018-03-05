@@ -18,7 +18,7 @@ func NewListNotesHandler(u ListNoteUseCase, f presenters.HTTPNoteListPresenterFa
 
 func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	presenter := h.PresenterFactory.Create(w)
-	err := h.UseCase.Run(presenter)
+	err := h.UseCase.ListNotes(presenter)
 
 	if err != nil {
 		presenter.ServiceUnavailable()
@@ -26,5 +26,5 @@ func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type ListNoteUseCase interface {
-	Run(markdownnotes.NoteListPresenter) error
+	ListNotes(markdownnotes.NoteListPresenter) error
 }
