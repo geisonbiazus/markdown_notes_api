@@ -12,12 +12,12 @@ import (
 
 func TestCreateNoteHandler(t *testing.T) {
 	setup := func() (
-		*doubles.CreateNoteUseCaseSpy,
+		*doubles.NoteUseCaseSpy,
 		*doubles.HTTPNotePresenterFactorySpy,
 		*CreateNoteHandler,
 		*httptest.ResponseRecorder,
 	) {
-		usecase := doubles.NewCreateNoteUseCaseSpy()
+		usecase := doubles.NewNoteUseCaseSpy()
 		presenterFactory := doubles.NewHTTPNotePresenterFactorySpy()
 		handler := NewCreateNoteHandler(usecase, presenterFactory)
 		w := httptest.NewRecorder()
@@ -39,16 +39,16 @@ func TestCreateNoteHandler(t *testing.T) {
 			t.Errorf("It didn't create the presenter with response writer")
 		}
 
-		if usecase.RunTitleArg != title {
-			t.Errorf("Expected: %v. Actual: %v", title, usecase.RunTitleArg)
+		if usecase.CreateNoteTitleArg != title {
+			t.Errorf("Expected: %v. Actual: %v", title, usecase.CreateNoteTitleArg)
 		}
 
-		if usecase.RunContentArg != content {
-			t.Errorf("Expected: %v. Actual: %v", content, usecase.RunContentArg)
+		if usecase.CreateNoteContentArg != content {
+			t.Errorf("Expected: %v. Actual: %v", content, usecase.CreateNoteContentArg)
 		}
 
-		if usecase.RunPresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.RunPresenterArg)
+		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.CreateNotePresenterArg)
 		}
 	})
 
@@ -58,22 +58,22 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if usecase.RunTitleArg != "" {
-			t.Errorf("Expected: %v. Actual: %v", "", usecase.RunTitleArg)
+		if usecase.CreateNoteTitleArg != "" {
+			t.Errorf("Expected: %v. Actual: %v", "", usecase.CreateNoteTitleArg)
 		}
 
-		if usecase.RunContentArg != "" {
-			t.Errorf("Expected: %v. Actual: %v", "", usecase.RunContentArg)
+		if usecase.CreateNoteContentArg != "" {
+			t.Errorf("Expected: %v. Actual: %v", "", usecase.CreateNoteContentArg)
 		}
 
-		if usecase.RunPresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.RunPresenterArg)
+		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.CreateNotePresenterArg)
 		}
 	})
 
 	t.Run("When an error occurs in the use case, it presents internal server error", func(t *testing.T) {
 		usecase, presenterFactory, handler, w := setup()
-		usecase.RunErrorResult = errors.New("Error")
+		usecase.CreateNoteErrorResult = errors.New("Error")
 
 		r := createNoteRequest("")
 

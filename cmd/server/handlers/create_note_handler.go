@@ -21,11 +21,15 @@ type CreateNoteHandler struct {
 	PresenterFactory presenters.HTTPNotePresenterFactory
 }
 
+func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.HTTPNotePresenterFactory) *CreateNoteHandler {
+	return &CreateNoteHandler{UseCase: u, PresenterFactory: pf}
+}
+
 func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	presenter := h.PresenterFactory.Create(w)
 	params := h.getParams(r)
 
-	err := h.UseCase.Run(params.Note.Title, params.Note.Content, presenter)
+	err := h.UseCase.CreateNote(params.Note.Title, params.Note.Content, presenter)
 	if err != nil {
 		presenter.ServiceUnavailable()
 	}
@@ -38,10 +42,6 @@ func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 	return params
 }
 
-func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.HTTPNotePresenterFactory) *CreateNoteHandler {
-	return &CreateNoteHandler{UseCase: u, PresenterFactory: pf}
-}
-
 type CreateNoteUseCase interface {
-	Run(title, content string, presenter markdownnotes.NotePresenter) error
+	CreateNote(title, content string, presenter markdownnotes.NotePresenter) error
 }
