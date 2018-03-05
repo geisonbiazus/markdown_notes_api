@@ -22,12 +22,12 @@ func (h *ShowNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p := httprouter.ParamsFromContext(r.Context())
 	noteID, _ := strconv.Atoi(p.ByName("id"))
 	presenter := h.PresenterFactory.Create(w)
-	err := h.UseCase.Run(noteID, presenter)
+	err := h.UseCase.ShowNote(noteID, presenter)
 	if err != nil {
 		presenter.ServiceUnavailable()
 	}
 }
 
 type ShowNoteUseCase interface {
-	Run(noteID int, p markdownnotes.NotePresenter) error
+	ShowNote(noteID int, p markdownnotes.NotePresenter) error
 }

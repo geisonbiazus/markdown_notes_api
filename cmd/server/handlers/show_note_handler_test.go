@@ -16,12 +16,12 @@ func TestShowNoteHandler(t *testing.T) {
 	setup := func() (
 		*httptest.ResponseRecorder,
 		*doubles.HTTPNotePresenterFactorySpy,
-		*doubles.ShowNoteUseCaseSpy,
+		*doubles.NoteUseCaseSpy,
 		*ShowNoteHandler,
 	) {
 		w := httptest.NewRecorder()
 		presenterFactory := doubles.NewHTTPNotePresenterFactorySpy()
-		usecase := doubles.NewShowNoteUseCaseSpy()
+		usecase := doubles.NewNoteUseCaseSpy()
 		handler := NewShowNoteHandler(usecase, presenterFactory)
 
 		return w, presenterFactory, usecase, handler
@@ -43,12 +43,12 @@ func TestShowNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if usecase.RunNoteIDArg != noteID {
-			t.Errorf("Expected: %v. Actual: %v", noteID, usecase.RunNoteIDArg)
+		if usecase.ShowNoteNoteIDArg != noteID {
+			t.Errorf("Expected: %v. Actual: %v", noteID, usecase.ShowNoteNoteIDArg)
 		}
 
-		if usecase.RunPresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.RunPresenterArg)
+		if usecase.ShowNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.ShowNotePresenterArg)
 		}
 	})
 
@@ -58,15 +58,15 @@ func TestShowNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if usecase.RunNoteIDArg != 0 {
-			t.Errorf("Expected: %v. Actual: %v", 0, usecase.RunNoteIDArg)
+		if usecase.ShowNoteNoteIDArg != 0 {
+			t.Errorf("Expected: %v. Actual: %v", 0, usecase.ShowNoteNoteIDArg)
 		}
 	})
 
 	t.Run("When an error occurs on UseCase, it presents ServiceUnavailable", func(t *testing.T) {
 		w, presenterFactory, usecase, handler := setup()
 		r := newRequest("42")
-		usecase.RunErrorResult = errors.New("error")
+		usecase.ShowNoteErrorResult = errors.New("error")
 
 		handler.ServeHTTP(w, r)
 
