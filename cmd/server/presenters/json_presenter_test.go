@@ -53,7 +53,7 @@ func TestJSONPresenter(t *testing.T) {
 				markdownnotes.ValidationError{Field: "secondField", Message: "Error message", Type: "ERROR_TYPE"},
 			}
 
-			presenter.PresentError(errs)
+			presenter.PresentErrors(errs)
 
 			expectedBody := []byte(
 				`{"errors":[` +

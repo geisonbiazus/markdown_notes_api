@@ -9,10 +9,10 @@ import (
 
 type ListNotesHandler struct {
 	UseCase          ListNoteUseCase
-	PresenterFactory presenters.HTTPNoteListPresenterFactory
+	PresenterFactory presenters.HTTPNotePresenterFactory
 }
 
-func NewListNotesHandler(u ListNoteUseCase, f presenters.HTTPNoteListPresenterFactory) *ListNotesHandler {
+func NewListNotesHandler(u ListNoteUseCase, f presenters.HTTPNotePresenterFactory) *ListNotesHandler {
 	return &ListNotesHandler{u, f}
 }
 

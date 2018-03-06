@@ -35,7 +35,7 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if presenterFactory.CreateResponseWritterArg != w {
+		if presenterFactory.CreateResponseWriterArg != w {
 			t.Errorf("It didn't create the presenter with response writer")
 		}
 

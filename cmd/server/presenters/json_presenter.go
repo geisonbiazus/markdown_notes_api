@@ -24,7 +24,7 @@ type errsContainer struct {
 	Errors []markdownnotes.ValidationError `json:"errors"`
 }
 
-func (p *JSONPresenter) PresentError(errs []markdownnotes.ValidationError) {
+func (p *JSONPresenter) PresentErrors(errs []markdownnotes.ValidationError) {
 	p.RenderJSON(http.StatusUnprocessableEntity, errsContainer{errs})
 }
 

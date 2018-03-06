@@ -18,14 +18,11 @@ type Handlers struct {
 func InitHandlers() *Handlers {
 	noteStorage := fakes.NewNoteStorageFake()
 	noteUseCase := notes.NewNoteUseCase(noteStorage)
-
-	createNotePresenterFactory := presenters.NewNoteJSONPresenterFactory(http.StatusCreated)
-	showNotePresenterFactory := presenters.NewNoteJSONPresenterFactory(http.StatusOK)
-	noteListPresenterFactory := presenters.NewNoteListJSONPresenterFactory()
+	notePresenterFactory := presenters.NewNoteJSONPresenterFactory()
 
 	return &Handlers{
-		CreateNote: handlers.NewCreateNoteHandler(noteUseCase, createNotePresenterFactory),
-		ListNotes:  handlers.NewListNotesHandler(noteUseCase, noteListPresenterFactory),
-		ShowNote:   handlers.NewShowNoteHandler(noteUseCase, showNotePresenterFactory),
+		CreateNote: handlers.NewCreateNoteHandler(noteUseCase, notePresenterFactory),
+		ListNotes:  handlers.NewListNotesHandler(noteUseCase, notePresenterFactory),
+		ShowNote:   handlers.NewShowNoteHandler(noteUseCase, notePresenterFactory),
 	}
 }

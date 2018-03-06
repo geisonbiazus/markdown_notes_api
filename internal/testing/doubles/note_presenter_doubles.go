@@ -16,10 +16,6 @@ func (s *NotePresenterSpy) PresentNote(note markdownnotes.Note) {
 	s.PresentNoteNoteArg = note
 }
 
-func (s *NotePresenterSpy) PresentError(errs []markdownnotes.ValidationError) {
-	s.PresentErrorErrsArg = errs
-}
-
 func (s *NotePresenterSpy) NotFound() {
 	s.NotFoundCalled = true
 }

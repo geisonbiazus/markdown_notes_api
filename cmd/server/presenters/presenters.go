@@ -11,15 +11,8 @@ type HTTPNotePresenterFactory interface {
 }
 
 type HTTPNotePresenter interface {
+	markdownnotes.CreatedNotePresenter
 	markdownnotes.NotePresenter
-	ServiceUnavailable()
-}
-
-type HTTPNoteListPresenter interface {
 	markdownnotes.NoteListPresenter
 	ServiceUnavailable()
-}
-
-type HTTPNoteListPresenterFactory interface {
-	Create(w http.ResponseWriter) HTTPNoteListPresenter
 }

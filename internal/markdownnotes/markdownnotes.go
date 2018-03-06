@@ -16,8 +16,12 @@ type NoteStorage interface {
 
 type NotePresenter interface {
 	PresentNote(Note)
-	PresentError([]ValidationError)
 	NotFound()
+}
+
+type CreatedNotePresenter interface {
+	PresentCreatedNote(Note)
+	PresentErrors([]ValidationError)
 }
 
 type NoteListPresenter interface {

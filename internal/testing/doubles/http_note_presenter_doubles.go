@@ -7,7 +7,9 @@ import (
 )
 
 type HTTPNotePresenterSpy struct {
+	*CreatedNotePresenterSpy
 	*NotePresenterSpy
+	*NoteListPresenterSpy
 	ResponseWriter           http.ResponseWriter
 	ServiceUnavailableCalled bool
 }
@@ -22,17 +24,17 @@ func NewHTTPNotePresenterSpy() *HTTPNotePresenterSpy {
 
 type HTTPNotePresenterFactorySpy struct {
 	CreateCalled              bool
-	CreateResponseWritterArg  http.ResponseWriter
+	CreateResponseWriterArg   http.ResponseWriter
 	ReturnedHTTPNotePresenter *HTTPNotePresenterSpy
-}
-
-func (s *HTTPNotePresenterFactorySpy) Create(w http.ResponseWriter) presenters.HTTPNotePresenter {
-	s.CreateCalled = true
-	s.CreateResponseWritterArg = w
-	s.ReturnedHTTPNotePresenter = NewHTTPNotePresenterSpy()
-	return s.ReturnedHTTPNotePresenter
 }
 
 func NewHTTPNotePresenterFactorySpy() *HTTPNotePresenterFactorySpy {
 	return &HTTPNotePresenterFactorySpy{}
+}
+
+func (s *HTTPNotePresenterFactorySpy) Create(w http.ResponseWriter) presenters.HTTPNotePresenter {
+	s.CreateCalled = true
+	s.CreateResponseWriterArg = w
+	s.ReturnedHTTPNotePresenter = NewHTTPNotePresenterSpy()
+	return s.ReturnedHTTPNotePresenter
 }

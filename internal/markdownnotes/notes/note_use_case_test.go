@@ -13,7 +13,7 @@ func TestNoteUseCase(t *testing.T) {
 		setup := func() (
 			markdownnotes.Note,
 			*doubles.NoteStorageSpy,
-			*doubles.NotePresenterSpy,
+			*doubles.CreatedNotePresenterSpy,
 			*NoteUseCase,
 		) {
 			note := markdownnotes.Note{
@@ -21,7 +21,7 @@ func TestNoteUseCase(t *testing.T) {
 				Content: "# Note Content",
 			}
 			storage := doubles.NewNoteStorageSpy()
-			presenter := doubles.NewNotePresenterSpy()
+			presenter := doubles.NewCreatedNotePresenterSpy()
 			usecase := NewNoteUseCase(storage)
 
 			return note, storage, presenter, usecase
@@ -43,8 +43,8 @@ func TestNoteUseCase(t *testing.T) {
 				t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg)
 			}
 
-			if presenter.PresentNoteNoteArg != savedNote {
-				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentNoteNoteArg)
+			if presenter.PresentCreatedNoteNoteArg != savedNote {
+				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentCreatedNoteNoteArg)
 			}
 		})
 
@@ -74,8 +74,8 @@ func TestNoteUseCase(t *testing.T) {
 
 			usecase.CreateNote("", "", presenter)
 
-			if !reflect.DeepEqual(presenter.PresentErrorErrsArg, errs) {
-				t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorErrsArg, errs)
+			if !reflect.DeepEqual(presenter.PresentErrorsErrsArg, errs) {
+				t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorsErrsArg, errs)
 			}
 		})
 	})

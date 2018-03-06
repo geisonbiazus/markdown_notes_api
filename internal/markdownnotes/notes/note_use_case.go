@@ -17,7 +17,7 @@ func NewNoteUseCase(storage markdownnotes.NoteStorage) *NoteUseCase {
 	}
 }
 
-func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.NotePresenter) error {
+func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.CreatedNotePresenter) error {
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
@@ -25,7 +25,7 @@ func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.
 
 	errs := u.Validator.Validate(note)
 	if len(errs) > 0 {
-		presenter.PresentError(errs)
+		presenter.PresentErrors(errs)
 		return nil
 	}
 
@@ -33,7 +33,7 @@ func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.
 	if err != nil {
 		return err
 	}
-	presenter.PresentNote(note)
+	presenter.PresentCreatedNote(note)
 
 	return nil
 }

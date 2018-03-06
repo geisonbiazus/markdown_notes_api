@@ -7,7 +7,7 @@ import (
 type NoteUseCaseSpy struct {
 	CreateNoteTitleArg     string
 	CreateNoteContentArg   string
-	CreateNotePresenterArg markdownnotes.NotePresenter
+	CreateNotePresenterArg markdownnotes.CreatedNotePresenter
 	CreateNoteErrorResult  error
 
 	ListNotesPresenterArg markdownnotes.NoteListPresenter
@@ -22,7 +22,7 @@ func NewNoteUseCaseSpy() *NoteUseCaseSpy {
 	return &NoteUseCaseSpy{}
 }
 
-func (s *NoteUseCaseSpy) CreateNote(title, content string, presenter markdownnotes.NotePresenter) error {
+func (s *NoteUseCaseSpy) CreateNote(title, content string, presenter markdownnotes.CreatedNotePresenter) error {
 	s.CreateNoteTitleArg = title
 	s.CreateNoteContentArg = content
 	s.CreateNotePresenterArg = presenter

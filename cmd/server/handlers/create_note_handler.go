@@ -43,5 +43,5 @@ func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 }
 
 type CreateNoteUseCase interface {
-	CreateNote(title, content string, presenter markdownnotes.NotePresenter) error
+	CreateNote(title, content string, presenter markdownnotes.CreatedNotePresenter) error
 }
