@@ -1,6 +1,7 @@
 package notes
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 
@@ -193,6 +194,106 @@ func TestNoteUseCase(t *testing.T) {
 
 			if err != storage.Error {
 				t.Errorf("Expected: %v. Actual: %v", err, storage.Error)
+			}
+		})
+	})
+
+	t.Run("UpdateNote", func(t *testing.T) {
+		setup := func() (
+			*NoteUseCase,
+			*doubles.NoteStorageSpy,
+			*doubles.UpdatedNotePresenterSpy,
+			markdownnotes.Note,
+		) {
+			storage := doubles.NewNoteStorageSpy()
+			usecase := NewNoteUseCase(storage)
+			presenter := doubles.NewUpdatedNotePresenterSpy()
+
+			savedNote := markdownnotes.Note{
+				ID:      42,
+				Title:   "Title",
+				Content: "Content",
+			}
+
+			storage.FindByIDNoteResult = savedNote
+
+			return usecase, storage, presenter, savedNote
+		}
+
+		t.Run("Given an existing note, it updates and presents it", func(t *testing.T) {
+			usecase, storage, presenter, savedNote := setup()
+
+			expectedNote := markdownnotes.Note{
+				ID:      savedNote.ID,
+				Title:   "New Title",
+				Content: "New Content",
+			}
+
+			storage.SaveNoteResult = expectedNote
+
+			usecase.UpdateNote(savedNote.ID, expectedNote.Title, expectedNote.Content, presenter)
+
+			if storage.SaveNoteArg != expectedNote {
+				t.Errorf("Expected: %v. Actual: %v", expectedNote, storage.SaveNoteArg)
+			}
+
+			if presenter.PresentUpdatedNoteNoteArg != expectedNote {
+				t.Errorf("Expected: %v. Actual: %v", expectedNote, presenter.PresentUpdatedNoteNoteArg)
+			}
+		})
+
+		t.Run("Given the note isn'saved, it presents NotFound", func(t *testing.T) {
+			usecase, storage, presenter, savedNote := setup()
+			storage.FindByIDNoteResult = markdownnotes.NoNote
+
+			usecase.UpdateNote(savedNote.ID, "title", "content", presenter)
+
+			if !presenter.NotFoundCalled {
+				t.Error("It didn't call NotFound")
+			}
+		})
+
+		t.Run("Given invalid params, it doesn't save the note and presents the errors", func(t *testing.T) {
+			usecase, storage, presenter, savedNote := setup()
+			usecase.UpdateNote(savedNote.ID, "", "", presenter)
+
+			errs := []markdownnotes.ValidationError{
+				markdownnotes.ValidationError{
+					Field:   "title",
+					Message: "Can't be blank",
+					Type:    "REQUIRED",
+				},
+			}
+
+			if !reflect.DeepEqual(presenter.PresentErrorsErrsArg, errs) {
+				t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorsErrsArg, errs)
+			}
+
+			if storage.SaveCalled {
+				t.Error("It called save when it shouldn't")
+			}
+		})
+
+		t.Run("If an error occurs on find, it returns the error", func(t *testing.T) {
+			usecase, _, presenter, savedNote := setup()
+			storage := doubles.NewErrorNoteSotorageStub()
+			usecase.NoteStorage = storage
+
+			err := usecase.UpdateNote(savedNote.ID, "title", "content", presenter)
+
+			if err != storage.Error {
+				t.Errorf("Expected: %v. Actual: %v", storage.Error, err)
+			}
+		})
+
+		t.Run("If an error occurs on save, it returns the error", func(t *testing.T) {
+			usecase, storage, presenter, savedNote := setup()
+			storage.SaveNoteErrorResult = errors.New("Some error")
+
+			err := usecase.UpdateNote(savedNote.ID, "title", "content", presenter)
+
+			if err != storage.SaveNoteErrorResult {
+				t.Errorf("Expected: %v. Actual: %v", storage.SaveNoteErrorResult, err)
 			}
 		})
 	})

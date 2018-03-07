@@ -24,6 +24,12 @@ type CreatedNotePresenter interface {
 	PresentErrors([]ValidationError)
 }
 
+type UpdatedNotePresenter interface {
+	PresentUpdatedNote(Note)
+	PresentErrors([]ValidationError)
+	NotFound()
+}
+
 type NoteListPresenter interface {
 	PresentNotes(notes []Note)
 }

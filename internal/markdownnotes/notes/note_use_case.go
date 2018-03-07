@@ -62,3 +62,33 @@ func (u *NoteUseCase) ShowNote(noteID int, presenter markdownnotes.NotePresenter
 
 	return nil
 }
+
+func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter markdownnotes.UpdatedNotePresenter) error {
+	note, err := u.NoteStorage.FindByID(noteID)
+	if err != nil {
+		return err
+	}
+
+	if note == markdownnotes.NoNote {
+		presenter.NotFound()
+		return nil
+	}
+
+	note.Title = title
+	note.Content = content
+
+	errs := u.Validator.Validate(note)
+	if len(errs) > 0 {
+		presenter.PresentErrors(errs)
+		return nil
+	}
+
+	note, err = u.NoteStorage.Save(note)
+	if err != nil {
+		return err
+	}
+
+	presenter.PresentUpdatedNote(note)
+
+	return nil
+}
