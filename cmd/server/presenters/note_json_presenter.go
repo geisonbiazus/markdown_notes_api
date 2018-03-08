@@ -22,6 +22,10 @@ func (p *NoteJSONPresenter) PresentNotes(n []markdownnotes.Note) {
 	p.RenderJSON(http.StatusOK, n)
 }
 
+func (p *NoteJSONPresenter) PresentUpdatedNote(n markdownnotes.Note) {
+	p.RenderJSON(http.StatusOK, n)
+}
+
 type NoteJSONPresenterFactory struct {
 	PresentNoteStatus int
 }

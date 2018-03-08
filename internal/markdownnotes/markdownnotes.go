@@ -16,22 +16,26 @@ type NoteStorage interface {
 
 type NotePresenter interface {
 	PresentNote(Note)
-	NotFound()
 }
 
 type CreatedNotePresenter interface {
 	PresentCreatedNote(Note)
-	PresentErrors([]ValidationError)
 }
 
 type UpdatedNotePresenter interface {
 	PresentUpdatedNote(Note)
-	PresentErrors([]ValidationError)
-	NotFound()
 }
 
 type NoteListPresenter interface {
 	PresentNotes(notes []Note)
+}
+
+type NotFoundPresenter interface {
+	NotFound()
+}
+
+type ErrorsPresenter interface {
+	PresentErrors([]ValidationError)
 }
 
 type ValidationError struct {

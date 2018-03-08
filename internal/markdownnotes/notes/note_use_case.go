@@ -17,7 +17,12 @@ func NewNoteUseCase(storage markdownnotes.NoteStorage) *NoteUseCase {
 	}
 }
 
-func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.CreatedNotePresenter) error {
+type CreatedNotePresenter interface {
+	markdownnotes.CreatedNotePresenter
+	markdownnotes.ErrorsPresenter
+}
+
+func (u *NoteUseCase) CreateNote(title, content string, presenter CreatedNotePresenter) error {
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
@@ -47,7 +52,12 @@ func (u *NoteUseCase) ListNotes(presenter markdownnotes.NoteListPresenter) error
 	return nil
 }
 
-func (u *NoteUseCase) ShowNote(noteID int, presenter markdownnotes.NotePresenter) error {
+type NotePresenter interface {
+	markdownnotes.NotePresenter
+	markdownnotes.NotFoundPresenter
+}
+
+func (u *NoteUseCase) ShowNote(noteID int, presenter NotePresenter) error {
 	note, err := u.NoteStorage.FindByID(noteID)
 	if err != nil {
 		return err
@@ -63,7 +73,13 @@ func (u *NoteUseCase) ShowNote(noteID int, presenter markdownnotes.NotePresenter
 	return nil
 }
 
-func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter markdownnotes.UpdatedNotePresenter) error {
+type UpdatedNotePresenter interface {
+	markdownnotes.UpdatedNotePresenter
+	markdownnotes.NotFoundPresenter
+	markdownnotes.ErrorsPresenter
+}
+
+func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter UpdatedNotePresenter) error {
 	note, err := u.NoteStorage.FindByID(noteID)
 	if err != nil {
 		return err

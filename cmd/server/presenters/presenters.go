@@ -14,5 +14,7 @@ type HTTPNotePresenter interface {
 	markdownnotes.CreatedNotePresenter
 	markdownnotes.NotePresenter
 	markdownnotes.NoteListPresenter
+	markdownnotes.NotFoundPresenter
+	markdownnotes.ErrorsPresenter
 	ServiceUnavailable()
 }
