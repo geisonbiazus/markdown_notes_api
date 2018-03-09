@@ -18,10 +18,10 @@ type createNoteHandlerParams struct {
 
 type CreateNoteHandler struct {
 	UseCase          CreateNoteUseCase
-	PresenterFactory presenters.HTTPNotePresenterFactory
+	PresenterFactory presenters.NotePresenterFactory
 }
 
-func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.HTTPNotePresenterFactory) *CreateNoteHandler {
+func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.NotePresenterFactory) *CreateNoteHandler {
 	return &CreateNoteHandler{UseCase: u, PresenterFactory: pf}
 }
 
@@ -43,5 +43,5 @@ func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 }
 
 type CreateNoteUseCase interface {
-	CreateNote(title, content string, presenter markdownnotes.CreatedNotePresenter) error
+	CreateNote(title, content string, presenter markdownnotes.NotePresenter) error
 }

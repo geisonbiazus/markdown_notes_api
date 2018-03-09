@@ -14,7 +14,7 @@ func TestNoteUseCase(t *testing.T) {
 		setup := func() (
 			markdownnotes.Note,
 			*doubles.NoteStorageSpy,
-			*doubles.CreatedNotePresenterSpy,
+			*doubles.NotePresenterSpy,
 			*NoteUseCase,
 		) {
 			note := markdownnotes.Note{
@@ -22,7 +22,7 @@ func TestNoteUseCase(t *testing.T) {
 				Content: "# Note Content",
 			}
 			storage := doubles.NewNoteStorageSpy()
-			presenter := doubles.NewCreatedNotePresenterSpy()
+			presenter := doubles.NewNotePresenterSpy()
 			usecase := NewNoteUseCase(storage)
 
 			return note, storage, presenter, usecase
@@ -44,8 +44,8 @@ func TestNoteUseCase(t *testing.T) {
 				t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg)
 			}
 
-			if presenter.PresentCreatedNoteNoteArg != savedNote {
-				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentCreatedNoteNoteArg)
+			if presenter.PresentNoteNoteArg != savedNote {
+				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentNoteNoteArg)
 			}
 		})
 
@@ -85,11 +85,11 @@ func TestNoteUseCase(t *testing.T) {
 		setup := func() (
 			*doubles.NoteStorageSpy,
 			*NoteUseCase,
-			*doubles.NoteListPresenterSpy,
+			*doubles.NotePresenterSpy,
 		) {
 			storage := doubles.NewNoteStorageSpy()
 			usecase := NewNoteUseCase(storage)
-			presenter := doubles.NewNoteListPresenterSpy()
+			presenter := doubles.NewNotePresenterSpy()
 			return storage, usecase, presenter
 		}
 
@@ -202,12 +202,12 @@ func TestNoteUseCase(t *testing.T) {
 		setup := func() (
 			*NoteUseCase,
 			*doubles.NoteStorageSpy,
-			*doubles.UpdatedNotePresenterSpy,
+			*doubles.NotePresenterSpy,
 			markdownnotes.Note,
 		) {
 			storage := doubles.NewNoteStorageSpy()
 			usecase := NewNoteUseCase(storage)
-			presenter := doubles.NewUpdatedNotePresenterSpy()
+			presenter := doubles.NewNotePresenterSpy()
 
 			savedNote := markdownnotes.Note{
 				ID:      42,
@@ -237,8 +237,8 @@ func TestNoteUseCase(t *testing.T) {
 				t.Errorf("Expected: %v. Actual: %v", expectedNote, storage.SaveNoteArg)
 			}
 
-			if presenter.PresentUpdatedNoteNoteArg != expectedNote {
-				t.Errorf("Expected: %v. Actual: %v", expectedNote, presenter.PresentUpdatedNoteNoteArg)
+			if presenter.PresentNoteNoteArg != expectedNote {
+				t.Errorf("Expected: %v. Actual: %v", expectedNote, presenter.PresentNoteNoteArg)
 			}
 		})
 

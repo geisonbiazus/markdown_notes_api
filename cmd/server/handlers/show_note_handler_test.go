@@ -15,12 +15,12 @@ import (
 func TestShowNoteHandler(t *testing.T) {
 	setup := func() (
 		*httptest.ResponseRecorder,
-		*doubles.HTTPNotePresenterFactorySpy,
+		*doubles.NotePresenterFactorySpy,
 		*doubles.NoteUseCaseSpy,
 		*ShowNoteHandler,
 	) {
 		w := httptest.NewRecorder()
-		presenterFactory := doubles.NewHTTPNotePresenterFactorySpy()
+		presenterFactory := doubles.NewNotePresenterFactorySpy()
 		usecase := doubles.NewNoteUseCaseSpy()
 		handler := NewShowNoteHandler(usecase, presenterFactory)
 
@@ -47,8 +47,8 @@ func TestShowNoteHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", noteID, usecase.ShowNoteNoteIDArg)
 		}
 
-		if usecase.ShowNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.ShowNotePresenterArg)
+		if usecase.ShowNotePresenterArg != presenterFactory.ReturnedNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedNotePresenter, usecase.ShowNotePresenterArg)
 		}
 	})
 
@@ -70,7 +70,7 @@ func TestShowNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if !presenterFactory.ReturnedHTTPNotePresenter.ServiceUnavailableCalled {
+		if !presenterFactory.ReturnedNotePresenter.ServiceUnavailableCalled {
 			t.Error("It didn't call ServiceUnavailable")
 		}
 	})

@@ -9,10 +9,10 @@ import (
 
 type ListNotesHandler struct {
 	UseCase          ListNoteUseCase
-	PresenterFactory presenters.HTTPNotePresenterFactory
+	PresenterFactory presenters.NotePresenterFactory
 }
 
-func NewListNotesHandler(u ListNoteUseCase, f presenters.HTTPNotePresenterFactory) *ListNotesHandler {
+func NewListNotesHandler(u ListNoteUseCase, f presenters.NotePresenterFactory) *ListNotesHandler {
 	return &ListNotesHandler{u, f}
 }
 
@@ -26,5 +26,5 @@ func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type ListNoteUseCase interface {
-	ListNotes(markdownnotes.NoteListPresenter) error
+	ListNotes(markdownnotes.NotePresenter) error
 }

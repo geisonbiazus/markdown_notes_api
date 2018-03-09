@@ -17,12 +17,7 @@ func NewNoteUseCase(storage markdownnotes.NoteStorage) *NoteUseCase {
 	}
 }
 
-type CreatedNotePresenter interface {
-	markdownnotes.CreatedNotePresenter
-	markdownnotes.ErrorsPresenter
-}
-
-func (u *NoteUseCase) CreateNote(title, content string, presenter CreatedNotePresenter) error {
+func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.NotePresenter) error {
 	note := markdownnotes.Note{
 		Title:   title,
 		Content: content,
@@ -38,12 +33,12 @@ func (u *NoteUseCase) CreateNote(title, content string, presenter CreatedNotePre
 	if err != nil {
 		return err
 	}
-	presenter.PresentCreatedNote(note)
+	presenter.PresentNote(note)
 
 	return nil
 }
 
-func (u *NoteUseCase) ListNotes(presenter markdownnotes.NoteListPresenter) error {
+func (u *NoteUseCase) ListNotes(presenter markdownnotes.NotePresenter) error {
 	notes, err := u.NoteStorage.FindAll()
 	if err != nil {
 		return err
@@ -52,12 +47,7 @@ func (u *NoteUseCase) ListNotes(presenter markdownnotes.NoteListPresenter) error
 	return nil
 }
 
-type NotePresenter interface {
-	markdownnotes.NotePresenter
-	markdownnotes.NotFoundPresenter
-}
-
-func (u *NoteUseCase) ShowNote(noteID int, presenter NotePresenter) error {
+func (u *NoteUseCase) ShowNote(noteID int, presenter markdownnotes.NotePresenter) error {
 	note, err := u.NoteStorage.FindByID(noteID)
 	if err != nil {
 		return err
@@ -73,13 +63,7 @@ func (u *NoteUseCase) ShowNote(noteID int, presenter NotePresenter) error {
 	return nil
 }
 
-type UpdatedNotePresenter interface {
-	markdownnotes.UpdatedNotePresenter
-	markdownnotes.NotFoundPresenter
-	markdownnotes.ErrorsPresenter
-}
-
-func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter UpdatedNotePresenter) error {
+func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter markdownnotes.NotePresenter) error {
 	note, err := u.NoteStorage.FindByID(noteID)
 	if err != nil {
 		return err
@@ -104,7 +88,7 @@ func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter Up
 		return err
 	}
 
-	presenter.PresentUpdatedNote(note)
+	presenter.PresentNote(note)
 
 	return nil
 }

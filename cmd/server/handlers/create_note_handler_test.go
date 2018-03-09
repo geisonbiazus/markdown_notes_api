@@ -13,12 +13,12 @@ import (
 func TestCreateNoteHandler(t *testing.T) {
 	setup := func() (
 		*doubles.NoteUseCaseSpy,
-		*doubles.HTTPNotePresenterFactorySpy,
+		*doubles.NotePresenterFactorySpy,
 		*CreateNoteHandler,
 		*httptest.ResponseRecorder,
 	) {
 		usecase := doubles.NewNoteUseCaseSpy()
-		presenterFactory := doubles.NewHTTPNotePresenterFactorySpy()
+		presenterFactory := doubles.NewNotePresenterFactorySpy()
 		handler := NewCreateNoteHandler(usecase, presenterFactory)
 		w := httptest.NewRecorder()
 
@@ -47,8 +47,8 @@ func TestCreateNoteHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", content, usecase.CreateNoteContentArg)
 		}
 
-		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.CreateNotePresenterArg)
+		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedNotePresenter, usecase.CreateNotePresenterArg)
 		}
 	})
 
@@ -66,8 +66,8 @@ func TestCreateNoteHandler(t *testing.T) {
 			t.Errorf("Expected: %v. Actual: %v", "", usecase.CreateNoteContentArg)
 		}
 
-		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedHTTPNotePresenter {
-			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedHTTPNotePresenter, usecase.CreateNotePresenterArg)
+		if usecase.CreateNotePresenterArg != presenterFactory.ReturnedNotePresenter {
+			t.Errorf("Expected: %v. Actual: %v", presenterFactory.ReturnedNotePresenter, usecase.CreateNotePresenterArg)
 		}
 	})
 
@@ -79,7 +79,7 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if !presenterFactory.ReturnedHTTPNotePresenter.ServiceUnavailableCalled {
+		if !presenterFactory.ReturnedNotePresenter.ServiceUnavailableCalled {
 			t.Error("It didn't called presenter.ServiceUnavailable()")
 		}
 	})
