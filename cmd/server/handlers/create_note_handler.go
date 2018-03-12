@@ -17,11 +17,11 @@ type createNoteHandlerParams struct {
 }
 
 type CreateNoteHandler struct {
-	UseCase          CreateNoteUseCase
+	UseCase          markdownnotes.NoteUseCase
 	PresenterFactory presenters.NotePresenterFactory
 }
 
-func NewCreateNoteHandler(u CreateNoteUseCase, pf presenters.NotePresenterFactory) *CreateNoteHandler {
+func NewCreateNoteHandler(u markdownnotes.NoteUseCase, pf presenters.NotePresenterFactory) *CreateNoteHandler {
 	return &CreateNoteHandler{UseCase: u, PresenterFactory: pf}
 }
 
@@ -40,8 +40,4 @@ func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &params)
 	return params
-}
-
-type CreateNoteUseCase interface {
-	CreateNote(title, content string, presenter markdownnotes.NotePresenter) error
 }

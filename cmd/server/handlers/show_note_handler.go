@@ -10,11 +10,11 @@ import (
 )
 
 type ShowNoteHandler struct {
-	UseCase          ShowNoteUseCase
+	UseCase          markdownnotes.NoteUseCase
 	PresenterFactory presenters.NotePresenterFactory
 }
 
-func NewShowNoteHandler(u ShowNoteUseCase, f presenters.NotePresenterFactory) *ShowNoteHandler {
+func NewShowNoteHandler(u markdownnotes.NoteUseCase, f presenters.NotePresenterFactory) *ShowNoteHandler {
 	return &ShowNoteHandler{UseCase: u, PresenterFactory: f}
 }
 

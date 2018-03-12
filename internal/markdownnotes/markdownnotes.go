@@ -22,6 +22,13 @@ type NotePresenter interface {
 	ServiceUnavailable()
 }
 
+type NoteUseCase interface {
+	CreateNote(title, content string, p NotePresenter) error
+	ShowNote(id int, p NotePresenter) error
+	UpdateNote(id int, title, content string, p NotePresenter) error
+	ListNotes(p NotePresenter) error
+}
+
 type ValidationError struct {
 	Field   string `json:"field"`
 	Type    string `json:"type"`

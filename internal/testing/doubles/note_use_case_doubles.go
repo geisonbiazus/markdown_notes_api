@@ -39,3 +39,7 @@ func (s *NoteUseCaseSpy) ShowNote(noteID int, p markdownnotes.NotePresenter) err
 	s.ShowNotePresenterArg = p
 	return s.ShowNoteErrorResult
 }
+
+func (s *NoteUseCaseSpy) UpdateNote(id int, title, content string, p markdownnotes.NotePresenter) error {
+	return nil
+}
