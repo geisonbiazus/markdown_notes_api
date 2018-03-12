@@ -21,6 +21,6 @@ func (h *ListNotesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := h.UseCase.ListNotes(presenter)
 
 	if err != nil {
-		presenter.ServiceUnavailable()
+		presenter.PresentError(err)
 	}
 }

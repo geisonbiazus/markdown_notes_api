@@ -25,7 +25,7 @@ func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.
 
 	errs := u.Validator.Validate(note)
 	if len(errs) > 0 {
-		presenter.PresentErrors(errs)
+		presenter.PresentValidationErrors(errs)
 		return nil
 	}
 
@@ -33,7 +33,7 @@ func (u *NoteUseCase) CreateNote(title, content string, presenter markdownnotes.
 	if err != nil {
 		return err
 	}
-	presenter.PresentNote(note)
+	presenter.PresentCreatedNote(note)
 
 	return nil
 }
@@ -43,7 +43,7 @@ func (u *NoteUseCase) ListNotes(presenter markdownnotes.NotePresenter) error {
 	if err != nil {
 		return err
 	}
-	presenter.PresentNotes(notes)
+	presenter.PresentNoteList(notes)
 	return nil
 }
 
@@ -54,7 +54,7 @@ func (u *NoteUseCase) ShowNote(noteID int, presenter markdownnotes.NotePresenter
 	}
 
 	if note == markdownnotes.NoNote {
-		presenter.NotFound()
+		presenter.PresentNotFound()
 		return nil
 	}
 
@@ -70,7 +70,7 @@ func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter ma
 	}
 
 	if note == markdownnotes.NoNote {
-		presenter.NotFound()
+		presenter.PresentNotFound()
 		return nil
 	}
 
@@ -79,7 +79,7 @@ func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter ma
 
 	errs := u.Validator.Validate(note)
 	if len(errs) > 0 {
-		presenter.PresentErrors(errs)
+		presenter.PresentValidationErrors(errs)
 		return nil
 	}
 
@@ -88,7 +88,7 @@ func (u *NoteUseCase) UpdateNote(noteID int, title, content string, presenter ma
 		return err
 	}
 
-	presenter.PresentNote(note)
+	presenter.PresentUpdatedNote(note)
 
 	return nil
 }

@@ -46,7 +46,7 @@ func TestListNotesHandler(t *testing.T) {
 
 		presenter := presenterFactory.ReturnedNotePresenter
 
-		if !presenter.ServiceUnavailableCalled {
+		if !presenter.PresentErrorCalled {
 			t.Error("It didn't call ServiceUnavailable")
 		}
 	})

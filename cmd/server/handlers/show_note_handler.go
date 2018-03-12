@@ -24,7 +24,7 @@ func (h *ShowNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	presenter := h.PresenterFactory.Create(w)
 	err := h.UseCase.ShowNote(noteID, presenter)
 	if err != nil {
-		presenter.ServiceUnavailable()
+		presenter.PresentError(err)
 	}
 }
 

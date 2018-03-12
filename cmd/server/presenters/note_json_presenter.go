@@ -10,11 +10,19 @@ type NoteJSONPresenter struct {
 	JSONPresenter
 }
 
+func (p *NoteJSONPresenter) PresentCreatedNote(n markdownnotes.Note) {
+	p.RenderJSON(http.StatusCreated, n)
+}
+
+func (p *NoteJSONPresenter) PresentUpdatedNote(n markdownnotes.Note) {
+	p.PresentNote(n)
+}
+
 func (p *NoteJSONPresenter) PresentNote(n markdownnotes.Note) {
 	p.RenderJSON(http.StatusOK, n)
 }
 
-func (p *NoteJSONPresenter) PresentNotes(n []markdownnotes.Note) {
+func (p *NoteJSONPresenter) PresentNoteList(n []markdownnotes.Note) {
 	p.RenderJSON(http.StatusOK, n)
 }
 

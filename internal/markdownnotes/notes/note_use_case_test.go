@@ -44,8 +44,8 @@ func TestNoteUseCase(t *testing.T) {
 				t.Errorf("Expected: %v. Actual: %v", note, storage.SaveNoteArg)
 			}
 
-			if presenter.PresentNoteNoteArg != savedNote {
-				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentNoteNoteArg)
+			if presenter.PresentCreatedNoteNoteArg != savedNote {
+				t.Errorf("Expected: %v. Actual: %v", savedNote, presenter.PresentCreatedNoteNoteArg)
 			}
 		})
 
@@ -75,8 +75,8 @@ func TestNoteUseCase(t *testing.T) {
 
 			usecase.CreateNote("", "", presenter)
 
-			if !reflect.DeepEqual(presenter.PresentErrorsErrsArg, errs) {
-				t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorsErrsArg, errs)
+			if !reflect.DeepEqual(presenter.PresentValidationErrorsErrsArg, errs) {
+				t.Errorf("Expected: %v. Actual: %v", presenter.PresentValidationErrorsErrsArg, errs)
 			}
 		})
 	})
@@ -97,11 +97,11 @@ func TestNoteUseCase(t *testing.T) {
 			_, usecase, presenter := setup()
 			usecase.ListNotes(presenter)
 
-			if !presenter.PresentNotesCalled {
-				t.Error("It didn't call PresentNotes")
+			if !presenter.PresentNoteListCalled {
+				t.Error("It didn't call PresentNoteList")
 			}
 
-			if len(presenter.PresentNotesNotesArg) > 1 {
+			if len(presenter.PresentNoteListNotesArg) > 1 {
 				t.Error("It presented some notes when it shouldn't")
 			}
 		})
@@ -116,12 +116,12 @@ func TestNoteUseCase(t *testing.T) {
 			storage.FindAllResult = notes
 			usecase.ListNotes(presenter)
 
-			if !presenter.PresentNotesCalled {
-				t.Error("It didn't call PresentNotes")
+			if !presenter.PresentNoteListCalled {
+				t.Error("It didn't call PresentNoteList")
 			}
 
-			if !reflect.DeepEqual(presenter.PresentNotesNotesArg, notes) {
-				t.Errorf("Expected: %v. Actual: %v", notes, presenter.PresentNotesNotesArg)
+			if !reflect.DeepEqual(presenter.PresentNoteListNotesArg, notes) {
+				t.Errorf("Expected: %v. Actual: %v", notes, presenter.PresentNoteListNotesArg)
 			}
 		})
 
@@ -237,8 +237,8 @@ func TestNoteUseCase(t *testing.T) {
 				t.Errorf("Expected: %v. Actual: %v", expectedNote, storage.SaveNoteArg)
 			}
 
-			if presenter.PresentNoteNoteArg != expectedNote {
-				t.Errorf("Expected: %v. Actual: %v", expectedNote, presenter.PresentNoteNoteArg)
+			if presenter.PresentUpdatedNoteNoteArg != expectedNote {
+				t.Errorf("Expected: %v. Actual: %v", expectedNote, presenter.PresentUpdatedNoteNoteArg)
 			}
 		})
 
@@ -265,8 +265,8 @@ func TestNoteUseCase(t *testing.T) {
 				},
 			}
 
-			if !reflect.DeepEqual(presenter.PresentErrorsErrsArg, errs) {
-				t.Errorf("Expected: %v. Actual: %v", presenter.PresentErrorsErrsArg, errs)
+			if !reflect.DeepEqual(presenter.PresentValidationErrorsErrsArg, errs) {
+				t.Errorf("Expected: %v. Actual: %v", presenter.PresentValidationErrorsErrsArg, errs)
 			}
 
 			if storage.SaveCalled {

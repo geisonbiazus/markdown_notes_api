@@ -31,7 +31,7 @@ func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err := h.UseCase.CreateNote(params.Note.Title, params.Note.Content, presenter)
 	if err != nil {
-		presenter.ServiceUnavailable()
+		presenter.PresentError(err)
 	}
 }
 

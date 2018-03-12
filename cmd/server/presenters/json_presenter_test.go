@@ -53,7 +53,7 @@ func TestJSONPresenter(t *testing.T) {
 				markdownnotes.ValidationError{Field: "secondField", Message: "Error message", Type: "ERROR_TYPE"},
 			}
 
-			presenter.PresentErrors(errs)
+			presenter.PresentValidationErrors(errs)
 
 			expectedBody := []byte(
 				`{"errors":[` +
@@ -69,7 +69,7 @@ func TestJSONPresenter(t *testing.T) {
 		t.Run("It renders a JSON saying that the service is unavailable", func(t *testing.T) {
 			w, presenter := setup()
 
-			presenter.ServiceUnavailable()
+			presenter.PresentError(nil)
 
 			expectedBody := []byte(
 				`{"errors":[` +
@@ -83,7 +83,7 @@ func TestJSONPresenter(t *testing.T) {
 	t.Run("NotFound", func(t *testing.T) {
 		t.Run("It renders NotFound", func(t *testing.T) {
 			w, presenter := setup()
-			presenter.NotFound()
+			presenter.PresentNotFound()
 
 			if w.Code != http.StatusNotFound {
 				t.Errorf("Expected: %v. Actual: %v", http.StatusNotFound, w.Code)

@@ -79,7 +79,7 @@ func TestCreateNoteHandler(t *testing.T) {
 
 		handler.ServeHTTP(w, r)
 
-		if !presenterFactory.ReturnedNotePresenter.ServiceUnavailableCalled {
+		if !presenterFactory.ReturnedNotePresenter.PresentErrorCalled {
 			t.Error("It didn't called presenter.ServiceUnavailable()")
 		}
 	})

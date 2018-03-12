@@ -15,11 +15,13 @@ type NoteStorage interface {
 }
 
 type NotePresenter interface {
+	PresentCreatedNote(Note)
+	PresentUpdatedNote(Note)
 	PresentNote(Note)
-	PresentNotes(notes []Note)
-	PresentErrors([]ValidationError)
-	NotFound()
-	ServiceUnavailable()
+	PresentNoteList(notes []Note)
+	PresentValidationErrors([]ValidationError)
+	PresentNotFound()
+	PresentError(error)
 }
 
 type NoteUseCase interface {

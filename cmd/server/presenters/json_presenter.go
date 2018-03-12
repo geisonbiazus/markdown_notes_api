@@ -24,11 +24,11 @@ type errsContainer struct {
 	Errors []markdownnotes.ValidationError `json:"errors"`
 }
 
-func (p *JSONPresenter) PresentErrors(errs []markdownnotes.ValidationError) {
+func (p *JSONPresenter) PresentValidationErrors(errs []markdownnotes.ValidationError) {
 	p.RenderJSON(http.StatusUnprocessableEntity, errsContainer{errs})
 }
 
-func (p *JSONPresenter) ServiceUnavailable() {
+func (p *JSONPresenter) PresentError(error) {
 	err := []markdownnotes.ValidationError{
 		markdownnotes.ValidationError{
 			Type: "SERVICE_UNAVAILABLE", Message: "Service Unavailable",
@@ -37,6 +37,6 @@ func (p *JSONPresenter) ServiceUnavailable() {
 	p.RenderJSON(http.StatusServiceUnavailable, errsContainer{err})
 }
 
-func (p *JSONPresenter) NotFound() {
+func (p *JSONPresenter) PresentNotFound() {
 	http.NotFound(p.ResponseWriter, &http.Request{})
 }
