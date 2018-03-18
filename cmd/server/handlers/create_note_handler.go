@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/geisonbiazus/markdown_notes_api/cmd/server/presenters"
@@ -37,7 +36,6 @@ func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
 	params := createNoteHandlerParams{}
-	body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &params)
+	json.NewDecoder(r.Body).Decode(&params)
 	return params
 }

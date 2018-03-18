@@ -29,7 +29,7 @@ func TestShowNoteHandler(t *testing.T) {
 
 	newRequest := func(noteID string) *http.Request {
 		r := httptest.NewRequest(http.MethodGet, "http://example.org/api/v1/notes/"+noteID, nil)
-		params := httprouter.Params{httprouter.Param{"id", noteID}}
+		params := httprouter.Params{httprouter.Param{Key: "id", Value: noteID}}
 		ctx := context.WithValue(r.Context(), httprouter.ParamsKey, params)
 		r = r.WithContext(ctx)
 
