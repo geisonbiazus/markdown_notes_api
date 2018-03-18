@@ -38,7 +38,7 @@ func TestJSONPresenter(t *testing.T) {
 
 			presenter.RenderJSON(http.StatusOK, s)
 
-			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s"}`, s.ID, s.Title))
+			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s"}`+"\n", s.ID, s.Title))
 
 			assertResponse(t, w, expectedBody, http.StatusOK)
 		})
@@ -59,7 +59,7 @@ func TestJSONPresenter(t *testing.T) {
 				`{"errors":[` +
 					fmt.Sprintf(`{"field":"%s","type":"%s","message":"%s"},`, errs[0].Field, errs[0].Type, errs[0].Message) +
 					fmt.Sprintf(`{"field":"%s","type":"%s","message":"%s"}`, errs[1].Field, errs[1].Type, errs[1].Message) +
-					`]}`)
+					`]}` + "\n")
 
 			assertResponse(t, w, expectedBody, http.StatusUnprocessableEntity)
 		})
@@ -74,7 +74,7 @@ func TestJSONPresenter(t *testing.T) {
 			expectedBody := []byte(
 				`{"errors":[` +
 					`{"field":"","type":"SERVICE_UNAVAILABLE","message":"Service Unavailable"}` +
-					`]}`)
+					`]}` + "\n")
 
 			assertResponse(t, w, expectedBody, http.StatusServiceUnavailable)
 		})
@@ -102,7 +102,7 @@ func assertResponse(t *testing.T, w *httptest.ResponseRecorder, expectedBody []b
 	body := responseBody(w)
 
 	if !reflect.DeepEqual(body, expectedBody) {
-		t.Errorf("Expected: %s. Actual: %s", expectedBody, body)
+		t.Errorf("\nExpected: %s. \n  Actual: %s", expectedBody, body)
 	}
 
 	if w.Result().StatusCode != expectedStatus {

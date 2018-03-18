@@ -33,7 +33,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 
 			presenter.PresentCreatedNote(note)
 
-			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`, note.ID, note.Title, note.Content))
+			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`+"\n", note.ID, note.Title, note.Content))
 
 			assertResponse(t, w, expectedBody, http.StatusCreated)
 		})
@@ -51,7 +51,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 
 			presenter.PresentNote(note)
 
-			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`, note.ID, note.Title, note.Content))
+			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`+"\n", note.ID, note.Title, note.Content))
 
 			assertResponse(t, w, expectedBody, http.StatusOK)
 		})
@@ -69,7 +69,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 
 			presenter.PresentUpdatedNote(note)
 
-			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`, note.ID, note.Title, note.Content))
+			expectedBody := []byte(fmt.Sprintf(`{"id":%d,"title":"%s","content":"%s"}`+"\n", note.ID, note.Title, note.Content))
 
 			assertResponse(t, w, expectedBody, http.StatusOK)
 		})
@@ -86,7 +86,7 @@ func TestNoteJSONPresenter(t *testing.T) {
 
 			expectedBody := []byte(
 				fmt.Sprintf(
-					`[{"id":%d,"title":"%s","content":"%s"},{"id":%d,"title":"%s","content":"%s"}]`,
+					`[{"id":%d,"title":"%s","content":"%s"},{"id":%d,"title":"%s","content":"%s"}]`+"\n",
 					note1.ID, note1.Title, note1.Content, note2.ID, note2.Title, note2.Content,
 				),
 			)

@@ -14,10 +14,9 @@ type JSONPresenter struct {
 const contentType = "application/json"
 
 func (p *JSONPresenter) RenderJSON(status int, object interface{}) {
-	body, _ := json.Marshal(object)
 	p.ResponseWriter.Header().Set("Content-Type", contentType)
 	p.ResponseWriter.WriteHeader(status)
-	p.ResponseWriter.Write(body)
+	json.NewEncoder(p.ResponseWriter).Encode(object)
 }
 
 type errsContainer struct {
