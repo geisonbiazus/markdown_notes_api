@@ -1,8 +1,6 @@
 package app
 
 import (
-	"net/http"
-
 	"github.com/geisonbiazus/markdown_notes_api/cmd/server/handlers"
 	"github.com/geisonbiazus/markdown_notes_api/cmd/server/presenters"
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes/notes"
@@ -10,9 +8,10 @@ import (
 )
 
 type Handlers struct {
-	CreateNote http.Handler
-	ListNotes  http.Handler
-	ShowNote   http.Handler
+	CreateNote *handlers.CreateNoteHandler
+	ListNotes  *handlers.ListNotesHandler
+	ShowNote   *handlers.ShowNoteHandler
+	UpdateNote *handlers.UpdateNoteHandler
 }
 
 func InitHandlers() *Handlers {
@@ -24,5 +23,6 @@ func InitHandlers() *Handlers {
 		CreateNote: handlers.NewCreateNoteHandler(noteUseCase, notePresenterFactory),
 		ListNotes:  handlers.NewListNotesHandler(noteUseCase, notePresenterFactory),
 		ShowNote:   handlers.NewShowNoteHandler(noteUseCase, notePresenterFactory),
+		// UpdateNote: handlers.New
 	}
 }

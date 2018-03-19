@@ -8,7 +8,7 @@ import (
 	"github.com/geisonbiazus/markdown_notes_api/internal/markdownnotes"
 )
 
-type createNoteHandlerParams struct {
+type noteHandlerParams struct {
 	Note struct {
 		Title   string
 		Content string
@@ -34,8 +34,8 @@ func (h *CreateNoteHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *CreateNoteHandler) getParams(r *http.Request) createNoteHandlerParams {
-	params := createNoteHandlerParams{}
+func (h *CreateNoteHandler) getParams(r *http.Request) noteHandlerParams {
+	params := noteHandlerParams{}
 	json.NewDecoder(r.Body).Decode(&params)
 	return params
 }

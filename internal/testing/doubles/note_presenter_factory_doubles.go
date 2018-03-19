@@ -13,12 +13,11 @@ type NotePresenterFactorySpy struct {
 }
 
 func NewNotePresenterFactorySpy() *NotePresenterFactorySpy {
-	return &NotePresenterFactorySpy{}
+	return &NotePresenterFactorySpy{ReturnedNotePresenter: NewNotePresenterSpy()}
 }
 
 func (s *NotePresenterFactorySpy) Create(w http.ResponseWriter) markdownnotes.NotePresenter {
 	s.CreateCalled = true
 	s.CreateResponseWriterArg = w
-	s.ReturnedNotePresenter = NewNotePresenterSpy()
 	return s.ReturnedNotePresenter
 }

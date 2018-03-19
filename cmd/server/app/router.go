@@ -13,6 +13,7 @@ func InitRouter() http.Handler {
 	router.Handler(http.MethodGet, "/api/v1/notes", h.ListNotes)
 	router.Handler(http.MethodPost, "/api/v1/notes", h.CreateNote)
 	router.Handler(http.MethodGet, "/api/v1/notes/:id", h.ShowNote)
+	router.Handler(http.MethodPut, "/api/v1/notes/:id", h.UpdateNote)
 
 	return router
 }

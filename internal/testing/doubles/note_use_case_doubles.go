@@ -16,6 +16,12 @@ type NoteUseCaseSpy struct {
 	ShowNoteNoteIDArg    int
 	ShowNotePresenterArg markdownnotes.NotePresenter
 	ShowNoteErrorResult  error
+
+	UpdateNoteIDArg        int
+	UpdateNoteTitleArg     string
+	UpdateNoteContentArg   string
+	UpdateNotePresenterArg markdownnotes.NotePresenter
+	UpdateNoteErrorResult  error
 }
 
 func NewNoteUseCaseSpy() *NoteUseCaseSpy {
@@ -41,5 +47,9 @@ func (s *NoteUseCaseSpy) ShowNote(noteID int, p markdownnotes.NotePresenter) err
 }
 
 func (s *NoteUseCaseSpy) UpdateNote(id int, title, content string, p markdownnotes.NotePresenter) error {
-	return nil
+	s.UpdateNoteIDArg = id
+	s.UpdateNoteTitleArg = title
+	s.UpdateNoteContentArg = content
+	s.UpdateNotePresenterArg = p
+	return s.UpdateNoteErrorResult
 }
