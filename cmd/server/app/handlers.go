@@ -23,6 +23,6 @@ func InitHandlers() *Handlers {
 		CreateNote: handlers.NewCreateNoteHandler(noteUseCase, notePresenterFactory),
 		ListNotes:  handlers.NewListNotesHandler(noteUseCase, notePresenterFactory),
 		ShowNote:   handlers.NewShowNoteHandler(noteUseCase, notePresenterFactory),
-		// UpdateNote: handlers.New
+		UpdateNote: handlers.NewUpdateNoteHandler(noteUseCase, notePresenterFactory),
 	}
 }
